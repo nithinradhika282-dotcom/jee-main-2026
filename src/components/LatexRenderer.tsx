@@ -14,7 +14,7 @@ const katexCache = new Map<string, string>();
 
 const RAW_LATEX_REGEX = /(\\[a-zA-Z]+|[_^]\{?[0-9a-zA-Z]|\\times|\\pm|\\leq|\\geq|\\neq|\\approx)/;
 
-export default function LatexRenderer({ content, latex, className = "" }: LatexRendererProps) {
+const LatexRenderer = function LatexRenderer({ content, latex, className = "" }: LatexRendererProps) {
   const textSource = content ?? latex ?? "";
 
   const renderedHtml = useMemo(() => {
@@ -116,7 +116,9 @@ export default function LatexRenderer({ content, latex, className = "" }: LatexR
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
     />
   );
-}
+};
+
+export default React.memo(LatexRenderer);
 
 function escapeHtml(str: string): string {
   return str

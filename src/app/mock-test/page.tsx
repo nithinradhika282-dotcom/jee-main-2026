@@ -788,9 +788,9 @@ export default function MockTestPage() {
                     <div
                       key={idx}
                       onClick={() => handleSelectOption(letter)}
-                      className={`p-3 rounded-xl border transition-all cursor-pointer flex items-start gap-3 ${
+                      className={`p-3 min-h-[44px] rounded-xl border transition-all cursor-pointer flex items-center gap-3 ${
                         isSelected
-                          ? "bg-sky-500/15 border-sky-500 text-white ring-1 ring-sky-500/50 shadow-sm"
+                          ? "bg-sky-500/15 border-sky-500 text-white ring-1 ring-sky-500/50"
                           : "bg-slate-900/70 border-slate-800 hover:border-slate-700 text-slate-200"
                       }`}
                     >
@@ -823,19 +823,19 @@ export default function MockTestPage() {
               <button
                 onClick={handleClearResponse}
                 disabled={!currentResp?.selectedAnswer}
-                className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-300 text-xs font-bold transition-colors"
+                className="px-3 min-h-[44px] rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-300 text-xs font-bold transition-colors"
               >
                 Clear
               </button>
               <button
                 onClick={handleMarkForReviewAndNext}
-                className="flex-1 py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 text-xs font-bold transition-colors"
+                className="flex-1 min-h-[44px] py-2 rounded-xl bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 border border-purple-500/30 text-xs font-bold transition-colors"
               >
                 Review & Next
               </button>
               <button
                 onClick={handleSaveAndNext}
-                className="flex-1 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold shadow-md shadow-sky-600/20 transition-colors"
+                className="flex-1 min-h-[44px] py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white text-xs font-bold transition-colors"
               >
                 Save & Next
               </button>

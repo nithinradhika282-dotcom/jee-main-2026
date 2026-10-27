@@ -1,365 +1,433 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
+import ReviseSubNav from "@/components/ReviseSubNav";
 import {
   Search,
-  BookOpen,
-  Copy,
-  Check,
+  ChevronRight,
+  X,
   Volume2,
   VolumeX,
-  ExternalLink,
-  Sparkles,
   Zap,
   Filter,
   AlertTriangle,
   Lightbulb,
-  ChevronDown,
-  ChevronUp,
+  Check,
+  Copy,
   Layers,
-  ArrowRight,
-  RotateCw,
-  Flame,
-  Award
+  ArrowRight
 } from "lucide-react";
 import LatexRenderer from "@/components/LatexRenderer";
 import { ALL_REVISION_DATA, RevisionChapterItem } from "@/data/allFormulasRevisionData";
 import { SpeechSpeaker } from "@/lib/speech";
-import { playSound } from "@/lib/audio";
+
+const ITEMS_PER_PAGE = 15;
+
+// Memoized Lightweight Chapter Row (NO KaTeX in list)
+const ChapterRow = React.memo(function ChapterRow({
+  item,
+  onSelect,
+}: {
+  item: RevisionChapterItem;
+  onSelect: (item: RevisionChapterItem) => void;
+}) {
+  return (
+    <button
+      onClick={() => onSelect(item)}
+      className="w-full flex items-center justify-between p-3 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 active:bg-slate-800/80 transition text-left min-h-[48px]"
+      aria-label={`Open revision for ${item.chapter}`}
+    >
+      <div className="flex items-center gap-2.5 min-w-0 pr-2">
+        {/* Yield indicator dot */}
+        {item.high_yield_weightage === "Very High" ? (
+          <span className="w-2 h-2 rounded-full bg-rose-500 shrink-0" title="Very High Yield" />
+        ) : item.high_yield_weightage === "High" ? (
+          <span className="w-2 h-2 rounded-full bg-amber-500 shrink-0" title="High Yield" />
+        ) : (
+          <span className="w-2 h-2 rounded-full bg-transparent shrink-0" />
+        )}
+
+        <div className="min-w-0">
+          <p className="text-sm font-semibold text-white truncate">{item.chapter}</p>
+          <p className="text-xs text-slate-400 truncate">{item.topic}</p>
+        </div>
+      </div>
+
+      <ChevronRight size={16} className="text-slate-500 shrink-0" />
+    </button>
+  );
+});
 
 export default function RevisionPage() {
   const [selectedSubject, setSelectedSubject] = useState<"All" | "Physics" | "Chemistry" | "Mathematics">("All");
   const [selectedClass, setSelectedClass] = useState<"All" | "11" | "12">("All");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [expandedChapterId, setExpandedChapterId] = useState<string | null>(null);
-  const [copiedId, setCopiedId] = useState<string | null>(null);
-  const [speakingId, setSpeakingId] = useState<string | null>(null);
+  const [showClassModal, setShowClassModal] = useState(false);
+
+  // Debounced search state
+  const [rawSearch, setRawSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+
+  // Pagination & Selected Chapter Modal
+  const [currentPage, setCurrentPage] = useState(1);
+  const [activeChapter, setActiveChapter] = useState<RevisionChapterItem | null>(null);
+
+  // Audio speech & Copy state inside Modal
+  const [speaking, setSpeaking] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  // 300ms Debounce effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(rawSearch.trim().toLowerCase());
+      setCurrentPage(1);
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [rawSearch]);
 
   // Filter items
   const filteredData = useMemo(() => {
     return ALL_REVISION_DATA.filter((item) => {
       const matchSubject = selectedSubject === "All" || item.subject === selectedSubject;
       const matchClass = selectedClass === "All" || item.class_level.toString() === selectedClass;
-      
-      const q = searchQuery.toLowerCase().trim();
+
+      const q = debouncedSearch;
       const matchSearch =
         !q ||
         item.chapter.toLowerCase().includes(q) ||
         item.topic.toLowerCase().includes(q) ||
         item.description.toLowerCase().includes(q) ||
         item.common_trap.toLowerCase().includes(q) ||
-        item.no_pen_trick.toLowerCase().includes(q) ||
-        item.key_points.some(kp => kp.toLowerCase().includes(q));
+        item.no_pen_trick.toLowerCase().includes(q);
 
       return matchSubject && matchClass && matchSearch;
     });
-  }, [selectedSubject, selectedClass, searchQuery]);
+  }, [selectedSubject, selectedClass, debouncedSearch]);
 
-  const handleCopy = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedId(id);
-    playSound("click");
-    setTimeout(() => setCopiedId(null), 2000);
-  };
+  // Total pages
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / ITEMS_PER_PAGE));
 
-  const handleSpeak = (item: RevisionChapterItem) => {
-    if (speakingId === item.id) {
+  // Current page items (only 10-15 in DOM)
+  const paginatedData = useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredData.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredData, currentPage]);
+
+  // Group paginated items by subject if "All" is active
+  const groupedPaginated = useMemo(() => {
+    if (selectedSubject !== "All") {
+      return [{ subject: selectedSubject, items: paginatedData }];
+    }
+    const groups: { [key: string]: RevisionChapterItem[] } = {};
+    for (const item of paginatedData) {
+      if (!groups[item.subject]) groups[item.subject] = [];
+      groups[item.subject].push(item);
+    }
+    return Object.keys(groups).map((s) => ({ subject: s, items: groups[s] }));
+  }, [paginatedData, selectedSubject]);
+
+  const handleSelectChapter = useCallback((item: RevisionChapterItem) => {
+    setActiveChapter(item);
+    setSpeaking(false);
+    SpeechSpeaker.stop();
+  }, []);
+
+  const handleSpeakActive = () => {
+    if (!activeChapter) return;
+    if (speaking) {
       SpeechSpeaker.stop();
-      setSpeakingId(null);
+      setSpeaking(false);
     } else {
-      const script = `Revision notes for ${item.chapter}. Topic: ${item.topic}. Formula: ${item.formula_latex}. Explanation: ${item.description}. Negative marking exam warning: ${item.common_trap}. Shortcut trick: ${item.no_pen_trick}`;
-      SpeechSpeaker.speak(script, () => {
-        setSpeakingId(null);
-      });
-      setSpeakingId(item.id);
+      const script = `${activeChapter.chapter}. Formula: ${activeChapter.formula_latex}. Note: ${activeChapter.description}. Exam trap: ${activeChapter.common_trap}. Shortcut: ${activeChapter.no_pen_trick}`;
+      SpeechSpeaker.speak(script, () => setSpeaking(false));
+      setSpeaking(true);
     }
   };
 
-  const toggleExpand = (id: string) => {
-    setExpandedChapterId(prev => prev === id ? null : id);
-    playSound("click");
+  const handleCopyFormula = () => {
+    if (!activeChapter) return;
+    navigator.clipboard.writeText(activeChapter.formula_latex);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 pb-24">
-      {/* Top Header */}
-      <div className="bg-slate-900 border-b border-slate-800 px-4 py-4 sticky top-12 z-20 backdrop-blur-md bg-slate-900/90 shadow-sm">
-        <div className="max-w-md mx-auto space-y-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-sky-500 to-indigo-600 text-white flex items-center justify-center shadow-md">
-                <Layers size={16} />
-              </div>
-              <div>
-                <h1 className="font-bold text-sm text-white flex items-center gap-1.5">
-                  Complete JEE Main Revision
-                  <span className="text-[9px] bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded-full border border-emerald-500/30 font-bold uppercase">
-                    All 60 Ch
-                  </span>
-                </h1>
-                <p className="text-[11px] text-slate-400">Physics • Chemistry • Mathematics Formula Bank</p>
-              </div>
-            </div>
+    <div className="space-y-4 max-w-md mx-auto">
+      {/* 1. TOP SEGMENTED SUB-TABS (Revise Section) */}
+      <ReviseSubNav />
 
-            <Link
-              href="/flashcards"
-              className="text-[11px] font-semibold text-amber-300 hover:text-amber-200 flex items-center gap-1 bg-amber-950/40 px-2 py-1 rounded-lg border border-amber-800/50"
-            >
-              <RotateCw size={12} />
-              <span>Flashcards</span>
-            </Link>
-          </div>
-
-          {/* Search Box */}
-          <div className="relative">
-            <Search className="absolute left-3 top-2.5 text-slate-400" size={14} />
+      {/* 2. SEARCH & FILTER CONTROLS */}
+      <div className="space-y-2">
+        <div className="flex items-center gap-2">
+          {/* Debounced Search */}
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-2.5 text-slate-500" size={14} />
             <input
               type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search formulas, reactions, theorems, shortcuts..."
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 transition-colors"
+              value={rawSearch}
+              onChange={(e) => setRawSearch(e.target.value)}
+              placeholder="Search chapters, topics..."
+              className="w-full bg-slate-900 border border-slate-800 rounded-xl pl-9 pr-8 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-sky-500 transition"
+              aria-label="Search revision chapters"
             />
-            {searchQuery && (
+            {rawSearch && (
               <button
-                onClick={() => setSearchQuery("")}
-                className="absolute right-3 top-2.5 text-slate-400 hover:text-white text-xs"
+                onClick={() => setRawSearch("")}
+                className="absolute right-2.5 top-2 text-slate-500 hover:text-white text-xs p-1"
+                aria-label="Clear search"
               >
                 ✕
               </button>
             )}
           </div>
 
-          {/* Subject Filter Tabs */}
-          <div className="grid grid-cols-4 gap-1 p-1 bg-slate-950 rounded-xl border border-slate-800 text-xs">
-            {(["All", "Physics", "Chemistry", "Mathematics"] as const).map((subj) => (
-              <button
-                key={subj}
-                onClick={() => {
-                  setSelectedSubject(subj);
-                  playSound("click");
-                }}
-                className={`py-1.5 rounded-lg font-semibold transition-all text-center ${
-                  selectedSubject === subj
-                    ? "bg-gradient-to-r from-sky-500 to-indigo-600 text-white shadow"
-                    : "text-slate-400 hover:text-slate-200"
-                }`}
-              >
-                {subj}
-              </button>
-            ))}
-          </div>
+          {/* Class Filter Button */}
+          <button
+            onClick={() => setShowClassModal(true)}
+            className={`px-3 py-2 rounded-xl border text-xs font-semibold flex items-center gap-1.5 transition min-h-[38px] ${
+              selectedClass !== "All"
+                ? "bg-sky-600/15 border-sky-500 text-sky-400"
+                : "bg-slate-900 border-slate-800 text-slate-300 hover:border-slate-700"
+            }`}
+            aria-label="Filter by class"
+          >
+            <Filter size={13} />
+            <span>{selectedClass === "All" ? "Class" : `Cl. ${selectedClass}`}</span>
+          </button>
+        </div>
 
-          {/* Class Filter Tabs */}
-          <div className="flex items-center justify-between text-xs text-slate-400 pt-0.5">
-            <span className="text-[11px]">Filter by Class:</span>
-            <div className="flex items-center gap-1">
+        {/* 3. ROW OF SUBJECT CHIPS (Max 4 Chips) */}
+        <div className="grid grid-cols-4 gap-1.5">
+          {(["All", "Physics", "Chemistry", "Mathematics"] as const).map((subj) => (
+            <button
+              key={subj}
+              onClick={() => {
+                setSelectedSubject(subj);
+                setCurrentPage(1);
+              }}
+              className={`py-1.5 rounded-lg text-xs font-semibold transition text-center border ${
+                selectedSubject === subj
+                  ? "bg-slate-800 border-sky-500 text-sky-400"
+                  : "bg-slate-900 border-slate-800 text-slate-400 hover:text-slate-200"
+              }`}
+            >
+              {subj === "Mathematics" ? "Maths" : subj}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. CHAPTERS LIST (LIGHTWEIGHT ROWS ONLY) */}
+      <div className="space-y-4">
+        {filteredData.length === 0 ? (
+          <div className="p-8 text-center bg-slate-900 border border-slate-800 rounded-xl text-xs text-slate-400">
+            No chapters match your search or filter.
+          </div>
+        ) : (
+          groupedPaginated.map((group) => (
+            <div key={group.subject} className="space-y-1.5">
+              {selectedSubject === "All" && (
+                <div className="flex items-center justify-between text-xs font-semibold text-slate-400 px-1 pt-1">
+                  <span>{group.subject}</span>
+                  <span className="text-[11px] text-slate-500">{group.items.length} Ch</span>
+                </div>
+              )}
+              <div className="space-y-1.5">
+                {group.items.map((item) => (
+                  <ChapterRow key={item.id} item={item} onSelect={handleSelectChapter} />
+                ))}
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* 5. PAGINATION CONTROLS (Only 15 in DOM) */}
+      {totalPages > 1 && (
+        <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-xs text-slate-400">
+          <button
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 disabled:opacity-40 disabled:pointer-events-none min-h-[40px]"
+          >
+            Previous
+          </button>
+          <span className="font-semibold text-slate-300">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-slate-200 disabled:opacity-40 disabled:pointer-events-none min-h-[40px]"
+          >
+            Next
+          </button>
+        </div>
+      )}
+
+      {/* 6. CLASS FILTER MODAL */}
+      {showClassModal && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/75 p-0 sm:p-4">
+          <div className="absolute inset-0" onClick={() => setShowClassModal(false)} />
+          <div className="relative w-full max-w-sm bg-slate-900 border-t sm:border border-slate-800 rounded-t-2xl sm:rounded-2xl p-4 shadow-xl z-10 space-y-3">
+            <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+              <h3 className="text-sm font-semibold text-white">Filter by Class Level</h3>
+              <button
+                onClick={() => setShowClassModal(false)}
+                className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white"
+              >
+                <X size={16} />
+              </button>
+            </div>
+            <div className="space-y-1.5">
               {(["All", "11", "12"] as const).map((lvl) => (
                 <button
                   key={lvl}
-                  onClick={() => setSelectedClass(lvl)}
-                  className={`px-2.5 py-0.5 rounded-md text-[11px] font-bold border transition-colors ${
+                  onClick={() => {
+                    setSelectedClass(lvl);
+                    setCurrentPage(1);
+                    setShowClassModal(false);
+                  }}
+                  className={`w-full flex items-center justify-between p-3 rounded-xl border text-xs font-semibold transition min-h-[44px] ${
                     selectedClass === lvl
-                      ? "bg-slate-800 text-white border-sky-500/50"
-                      : "bg-slate-950 text-slate-400 border-slate-800 hover:text-slate-200"
+                      ? "bg-sky-600/15 border-sky-500 text-sky-400"
+                      : "bg-slate-950 border-slate-800 text-slate-300 hover:border-slate-700"
                   }`}
                 >
-                  {lvl === "All" ? "All Classes" : `Class ${lvl}`}
+                  <span>{lvl === "All" ? "All Classes (11 & 12)" : `Class ${lvl} Only`}</span>
+                  {selectedClass === lvl && <Check size={16} />}
                 </button>
               ))}
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Chapters Revision List */}
-      <div className="max-w-md mx-auto px-4 mt-4 space-y-3">
-        <div className="flex items-center justify-between text-xs text-slate-400 px-1">
-          <span>Showing {filteredData.length} of {ALL_REVISION_DATA.length} Chapters</span>
-          <span className="text-[11px] text-sky-400">Tap to expand detailed sheet</span>
-        </div>
+      {/* 7. CHAPTER DETAIL BOTTOM SHEET / MODAL (KATEX RENDERS ONLY HERE) */}
+      {activeChapter && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/75 p-0 sm:p-4">
+          <div
+            className="absolute inset-0"
+            onClick={() => {
+              setActiveChapter(null);
+              SpeechSpeaker.stop();
+            }}
+          />
+          <div className="relative w-full max-w-md bg-slate-900 border-t sm:border border-slate-800 rounded-t-2xl sm:rounded-2xl p-4 shadow-xl z-10 max-h-[88vh] overflow-y-auto no-scrollbar space-y-3">
+            {/* Top Handle */}
+            <div className="w-10 h-1 bg-slate-700 rounded-full mx-auto sm:hidden" />
 
-        {filteredData.map((item) => {
-          const isExpanded = expandedChapterId === item.id;
-
-          return (
-            <div
-              key={item.id}
-              className={`rounded-2xl border transition-all duration-200 overflow-hidden ${
-                isExpanded
-                  ? "bg-slate-900 border-sky-500/40 shadow-lg shadow-sky-950/20"
-                  : "bg-slate-900/90 border-slate-800 hover:border-slate-700"
-              }`}
-            >
-              {/* Header Bar */}
-              <div
-                onClick={() => toggleExpand(item.id)}
-                className="p-3.5 cursor-pointer select-none space-y-2"
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5 flex-wrap">
-                    <span
-                      className={`font-bold px-2 py-0.5 rounded text-[10px] border ${
-                        item.subject === "Physics"
-                          ? "bg-sky-500/20 text-sky-300 border-sky-500/30"
-                          : item.subject === "Chemistry"
-                          ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
-                          : "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                      }`}
-                    >
-                      {item.subject}
-                    </span>
-
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700 font-mono">
-                      Class {item.class_level}
-                    </span>
-
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/10 text-rose-300 border border-rose-500/20 font-bold flex items-center gap-0.5">
-                      <Flame size={10} className="text-rose-400" />
-                      {item.high_yield_weightage} Yield
-                    </span>
-                  </div>
-
-                  <div className="text-slate-400">
-                    {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                  </div>
+            {/* Header */}
+            <div className="flex items-start justify-between gap-2 pb-2.5 border-b border-slate-800">
+              <div>
+                <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-0.5">
+                  <span>{activeChapter.subject}</span>
+                  <span>•</span>
+                  <span>Class {activeChapter.class_level}</span>
+                  {activeChapter.high_yield_weightage === "Very High" && (
+                    <>
+                      <span>•</span>
+                      <span className="text-rose-400 font-semibold">High Yield</span>
+                    </>
+                  )}
                 </div>
-
-                <div>
-                  <h3 className="font-bold text-sm text-white">{item.chapter}</h3>
-                  <p className="text-[11px] text-sky-400 font-medium">{item.topic}</p>
-                </div>
-
-                {/* Compact Formula Preview (when collapsed) */}
-                {!isExpanded && (
-                  <div className="p-2 bg-slate-950 rounded-lg border border-slate-800 text-center text-xs text-slate-300 overflow-x-auto">
-                    <LatexRenderer content={`$$${item.formula_latex}$$`} />
-                  </div>
-                )}
+                <h2 className="text-base font-semibold text-white">{activeChapter.chapter}</h2>
+                <p className="text-xs text-sky-400 font-medium">{activeChapter.topic}</p>
               </div>
 
-              {/* Expanded Comprehensive Revision Sheet */}
-              {isExpanded && (
-                <div className="p-3.5 pt-0 border-t border-slate-800/80 space-y-3 text-xs animate-in fade-in duration-200">
-                  {/* Action Bar inside Expanded Card */}
-                  <div className="flex items-center justify-between pt-3">
-                    <div className="flex items-center gap-1 text-sky-400 font-bold text-xs">
-                      <Zap size={14} /> Master Formula & Relation:
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={() => handleCopy(item.id, item.formula_latex)}
-                        className="text-[10px] text-slate-400 hover:text-white flex items-center gap-1 bg-slate-800 px-2 py-1 rounded border border-slate-700"
-                      >
-                        {copiedId === item.id ? <Check size={11} className="text-emerald-400" /> : <Copy size={11} />}
-                        <span>{copiedId === item.id ? "Copied" : "Copy LaTeX"}</span>
-                      </button>
-
-                      <button
-                        onClick={() => handleSpeak(item)}
-                        className={`text-[10px] flex items-center gap-1 px-2 py-1 rounded border transition-colors ${
-                          speakingId === item.id
-                            ? "bg-sky-500/20 text-sky-300 border-sky-500/40"
-                            : "bg-slate-800 text-slate-300 border-slate-700 hover:bg-slate-700"
-                        }`}
-                      >
-                        {speakingId === item.id ? <VolumeX size={11} /> : <Volume2 size={11} />}
-                        <span>{speakingId === item.id ? "Stop" : "Listen"}</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* High Quality Formula Box */}
-                  <div className="p-3 bg-slate-950 rounded-xl border border-sky-500/30 text-center text-sky-200 text-sm overflow-x-auto shadow-inner">
-                    <LatexRenderer content={`$$${item.formula_latex}$$`} />
-                  </div>
-
-                  {/* Core Description */}
-                  <div className="p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 text-slate-200 leading-relaxed">
-                    <LatexRenderer content={item.description} />
-                  </div>
-
-                  {/* Key Takeaways & Exam Points */}
-                  <div className="p-2.5 rounded-lg bg-slate-950/70 border border-slate-800 space-y-1.5">
-                    <div className="font-bold text-[11px] text-indigo-300 flex items-center gap-1">
-                      <Sparkles size={12} className="text-indigo-400" /> High-Frequency Concept Keys:
-                    </div>
-                    <ul className="space-y-1 text-slate-300 text-[11px]">
-                      {item.key_points.map((pt, i) => (
-                        <li key={i} className="flex items-start gap-1.5">
-                          <span className="text-indigo-400 font-bold">•</span>
-                          <span className="leading-relaxed">
-                            <LatexRenderer content={pt} />
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  {/* Common Student Trap Alert */}
-                  <div className="p-2.5 rounded-lg bg-rose-950/30 border border-rose-900/40 text-[11px] text-rose-300 space-y-1">
-                    <div className="font-bold flex items-center gap-1 text-rose-400">
-                      <AlertTriangle size={13} /> Common Student Trap & Negative Mark Warning:
-                    </div>
-                    <p className="text-rose-200/90 leading-relaxed pl-4">
-                      <LatexRenderer content={item.common_trap} />
-                    </p>
-                  </div>
-
-                  {/* 30-Second No-Pen Shortcut Trick */}
-                  <div className="p-2.5 rounded-lg bg-amber-950/30 border border-amber-900/40 text-[11px] text-amber-300 space-y-1">
-                    <div className="font-bold flex items-center gap-1 text-amber-400">
-                      <Zap size={13} /> 🧠 30-Second No-Pen Mental Shortcut:
-                    </div>
-                    <p className="text-amber-200/90 leading-relaxed pl-4">
-                      <LatexRenderer content={item.no_pen_trick} />
-                    </p>
-                  </div>
-
-                  {/* Practice Links */}
-                  <div className="grid grid-cols-2 gap-2 pt-1">
-                    <Link
-                      href={`/?chapter=${encodeURIComponent(item.chapter)}`}
-                      className="py-2 px-2.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-center text-[11px] font-semibold text-sky-300 border border-slate-700 transition-colors flex items-center justify-center gap-1"
-                    >
-                      <span>Practice 65+ PYQs</span>
-                      <ArrowRight size={12} />
-                    </Link>
-
-                    <Link
-                      href={`/flashcards`}
-                      className="py-2 px-2.5 bg-amber-950/40 hover:bg-amber-900/40 rounded-lg text-center text-[11px] font-semibold text-amber-300 border border-amber-800/50 transition-colors flex items-center justify-center gap-1"
-                    >
-                      <RotateCw size={12} />
-                      <span>Review as Card</span>
-                    </Link>
-                  </div>
-                </div>
-              )}
+              <button
+                onClick={() => {
+                  setActiveChapter(null);
+                  SpeechSpeaker.stop();
+                }}
+                className="w-10 h-10 flex items-center justify-center text-slate-400 hover:text-white rounded-lg transition"
+                aria-label="Close chapter sheet"
+              >
+                <X size={18} />
+              </button>
             </div>
-          );
-        })}
 
-        {filteredData.length === 0 && (
-          <div className="text-center py-12 bg-slate-900 rounded-2xl border border-slate-800 p-6 space-y-2">
-            <BookOpen size={32} className="mx-auto text-slate-600" />
-            <h3 className="font-bold text-white text-sm">No chapters match your search</h3>
-            <p className="text-xs text-slate-400">Try searching with a broader topic name or reset the filters.</p>
-            <button
+            {/* Master Formula (KaTeX Rendered on demand) */}
+            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-semibold text-sky-400 flex items-center gap-1">
+                  <Zap size={13} /> Master Formula:
+                </span>
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={handleSpeakActive}
+                    className="p-1 text-slate-400 hover:text-white rounded transition"
+                    title="Audio narration"
+                  >
+                    {speaking ? <VolumeX size={14} className="text-rose-400" /> : <Volume2 size={14} />}
+                  </button>
+                  <button
+                    onClick={handleCopyFormula}
+                    className="p-1 text-slate-400 hover:text-white rounded transition"
+                    title="Copy formula"
+                  >
+                    {copied ? <Check size={14} className="text-emerald-400" /> : <Copy size={14} />}
+                  </button>
+                </div>
+              </div>
+
+              <div className="text-center overflow-x-auto py-1">
+                <LatexRenderer content={`$$${activeChapter.formula_latex}$$`} />
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed pt-1 border-t border-slate-900">
+                <LatexRenderer content={activeChapter.description} />
+              </p>
+            </div>
+
+            {/* 30-Second Mental Shortcut */}
+            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1 text-xs">
+              <p className="font-semibold text-amber-400 flex items-center gap-1">
+                <Lightbulb size={13} /> 30-Second Shortcut Trick:
+              </p>
+              <div className="text-slate-300 leading-relaxed">
+                <LatexRenderer content={activeChapter.no_pen_trick} />
+              </div>
+            </div>
+
+            {/* Common Exam Trap */}
+            <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1 text-xs">
+              <p className="font-semibold text-rose-400 flex items-center gap-1">
+                <AlertTriangle size={13} /> Negative Marking Trap:
+              </p>
+              <div className="text-slate-300 leading-relaxed">
+                <LatexRenderer content={activeChapter.common_trap} />
+              </div>
+            </div>
+
+            {/* Key Points */}
+            {activeChapter.key_points && activeChapter.key_points.length > 0 && (
+              <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 text-xs">
+                <p className="font-semibold text-slate-200">Key Points & Rules:</p>
+                <ul className="space-y-1 list-disc list-inside text-slate-300">
+                  {activeChapter.key_points.map((pt, idx) => (
+                    <li key={idx} className="leading-relaxed">
+                      <LatexRenderer content={pt} />
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Primary Action Button: Practice this chapter */}
+            <Link
+              href={`/?chapter=${encodeURIComponent(activeChapter.chapter)}&subject=${encodeURIComponent(activeChapter.subject)}`}
               onClick={() => {
-                setSearchQuery("");
-                setSelectedSubject("All");
-                setSelectedClass("All");
+                setActiveChapter(null);
+                SpeechSpeaker.stop();
               }}
-              className="mt-2 px-3 py-1.5 bg-sky-600 hover:bg-sky-500 rounded-lg text-xs font-semibold text-white"
+              className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-sky-600 hover:bg-sky-500 active:bg-sky-700 text-white font-semibold text-xs transition shadow-sm min-h-[44px]"
             >
-              Clear Filters
-            </button>
+              <span>Practice Questions for this Chapter</span>
+              <ArrowRight size={14} />
+            </Link>
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }

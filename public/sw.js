@@ -35,12 +35,30 @@ self.addEventListener("activate", (event) => {
 
 // Fetch: Network first with cache fallback
 self.addEventListener("fetch", (event) => {
-  // Only handle GET requests and non-API/non-chrome-extension requests
-  if (
-    event.request.method !== "GET" ||
-    event.request.url.includes("/api/") ||
-    event.request.url.startsWith("chrome-extension")
-  ) {
+  if (event.request.method !== "GET" || event.request.url.startsWith("chrome-extension")) {
+    return;
+  }
+
+  // Stale-while-revalidate for static chapters API data
+  if (event.request.url.includes("/api/chapters")) {
+    event.respondWith(
+      caches.open(CACHE_NAME).then((cache) => {
+        return cache.match(event.request).then((cached) => {
+          const fetchPromise = fetch(event.request).then((networkResponse) => {
+            if (networkResponse && networkResponse.status === 200) {
+              cache.put(event.request, networkResponse.clone());
+            }
+            return networkResponse;
+          }).catch(() => cached);
+          return cached || fetchPromise;
+        });
+      })
+    );
+    return;
+  }
+
+  // Ignore dynamic POST / streaming API endpoints
+  if (event.request.url.includes("/api/")) {
     return;
   }
 

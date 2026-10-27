@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
+import Header from "@/components/Header";
+import BottomNav from "@/components/BottomNav";
 import Footer from "@/components/Footer";
 import PwaInstallPrompt from "@/components/PwaInstallPrompt";
 
@@ -36,10 +37,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="h-full">
       <body className="min-h-full flex flex-col bg-slate-950 text-slate-100 antialiased selection:bg-sky-500/30 selection:text-sky-200">
-        <Navbar />
-        <main className="flex-1 max-w-md w-full mx-auto px-3 py-4">{children}</main>
+        <Header />
+        <main className="flex-1 max-w-md w-full mx-auto px-4 py-4 pb-24">{children}</main>
         <PwaInstallPrompt />
         <Footer />
+        <BottomNav />
       </body>
     </html>
   );

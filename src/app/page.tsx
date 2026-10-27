@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useMemo, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import LatexRenderer from "@/components/LatexRenderer";
+import PracticeTimer from "@/components/PracticeTimer";
+import PracticeFilterModal from "@/components/PracticeFilterModal";
 import { Question } from "@/lib/db";
 import confetti from "canvas-confetti";
 import { playSound } from "@/lib/audio";
@@ -12,11 +15,9 @@ import {
   HelpCircle,
   Bookmark,
   BookmarkCheck,
-  Timer,
   ChevronLeft,
   ChevronRight,
   Eye,
-  EyeOff,
   Search,
   Sparkles,
   AlertTriangle,
@@ -25,21 +26,17 @@ import {
   FileCheck2,
   Shuffle,
   Brain,
-  MessageSquare,
   Send,
   X,
   Flame,
-  Award,
   Target,
   Zap,
-  TrendingUp,
   RotateCcw,
-  BookOpen,
   Volume2,
   VolumeX,
   Keyboard,
   Printer,
-  Check
+  SlidersHorizontal,
 } from "lucide-react";
 
 interface UserProfile {
@@ -61,12 +58,14 @@ interface ChatMessage {
   message: string;
 }
 
-export default function PracticePage() {
+function PracticeContent() {
+  const searchParams = useSearchParams();
+
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [totalCount, setTotalCount] = useState(0);
 
-  // User Psychology & Retention State
+  // User Stats
   const [user, setUser] = useState<UserProfile | null>(null);
   const [xpToast, setXpToast] = useState<{ show: boolean; msg: string; positive: boolean }>({
     show: false,
@@ -74,20 +73,41 @@ export default function PracticePage() {
     positive: true,
   });
 
-  // Filters & Modes
+  // Filters State
   const [exam, setExam] = useState<string>("All");
   const [year, setYear] = useState<string>("All");
   const [subject, setSubject] = useState<string>("All");
   const [chapter, setChapter] = useState<string>("All");
   const [difficulty, setDifficulty] = useState<string>("All");
   const [questionType, setQuestionType] = useState<string>("All");
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const [showUnverified, setShowUnverified] = useState<boolean>(false);
+  const [filterModalOpen, setFilterModalOpen] = useState(false);
+
+  // Search Debouncing (300ms)
+  const [rawSearchInput, setRawSearchInput] = useState<string>("");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchQuery(rawSearchInput.trim());
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [rawSearchInput]);
+
+  // Read URL search parameters on mount (e.g. from Revision page)
+  useEffect(() => {
+    const qChapter = searchParams.get("chapter");
+    const qSubject = searchParams.get("subject");
+    if (qChapter) setChapter(qChapter);
+    if (qSubject) setSubject(qSubject);
+  }, [searchParams]);
+
+  // Mode Toggles
   const [noPenMode, setNoPenMode] = useState<boolean>(false);
   const [shuffleMode, setShuffleMode] = useState<boolean>(true);
   const [chaptersList, setChaptersList] = useState<{ name: string; subject: string }[]>([]);
 
-  // Navigation & Current Question
+  // Active Question & Navigation
   const [currentIndex, setCurrentIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<string | null>(null);
   const [numericalInput, setNumericalInput] = useState<string>("");
@@ -96,18 +116,18 @@ export default function PracticePage() {
   const [showSolution, setShowSolution] = useState(false);
   const [bookmarked, setBookmarked] = useState(false);
 
-  // Timer
+  // Timer Ref (isolates 1-second ticks to prevent full-page & KaTeX re-renders)
+  const secondsRef = useRef(0);
   const [timerActive, setTimerActive] = useState(true);
-  const [seconds, setSeconds] = useState(0);
 
-  // Sarthi AI Chat Drawer State
+  // Sarthi AI Chat Drawer
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
   const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
   const [chatInput, setChatInput] = useState("");
   const [chatLoading, setChatLoading] = useState(false);
   const chatScrollRef = useRef<HTMLDivElement>(null);
 
-  // Audio Speech (TTS) & Shortcuts & Print State
+  // Speech TTS & Modals
   const [speakingQ, setSpeakingQ] = useState(false);
   const [speakingSol, setSpeakingSol] = useState(false);
   const [showShortcutsModal, setShowShortcutsModal] = useState(false);
@@ -128,14 +148,14 @@ export default function PracticePage() {
     loadUserStats();
   }, [loadUserStats]);
 
-  // Load Chapters List for Filter
+  // Load Chapters List for Filters
   useEffect(() => {
     fetch("/api/chapters")
       .then((res) => res.json())
       .then((data) => {
         if (data.chapters) setChaptersList(data.chapters);
       })
-      .catch((err) => console.error(err));
+      .catch(console.error);
   }, []);
 
   const resetQuestionState = useCallback(() => {
@@ -145,7 +165,7 @@ export default function PracticePage() {
     setIsCorrect(null);
     setShowSolution(false);
     setBookmarked(false);
-    setSeconds(0);
+    secondsRef.current = 0;
     SpeechSpeaker.stop();
     setSpeakingQ(false);
     setSpeakingSol(false);
@@ -161,7 +181,7 @@ export default function PracticePage() {
     if (chapter !== "All") params.append("chapter", chapter);
     if (difficulty !== "All") params.append("difficulty", difficulty.toLowerCase());
     if (questionType !== "All") params.append("question_type", questionType);
-    if (searchQuery.trim()) params.append("search", searchQuery.trim());
+    if (searchQuery) params.append("search", searchQuery);
     if (showUnverified) params.append("include_unverified", "true");
     if (shuffleMode) params.append("shuffle", "true");
     params.append("limit", "1000");
@@ -172,7 +192,6 @@ export default function PracticePage() {
       .then((data) => {
         const fetched = [...(data.questions || [])];
         if (shuffleMode && fetched.length > 1) {
-          // Robust Fisher-Yates shuffle to guarantee a different starting question on every load
           for (let i = fetched.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [fetched[i], fetched[j]] = [fetched[j], fetched[i]];
@@ -188,37 +207,25 @@ export default function PracticePage() {
         console.error(err);
         setLoading(false);
       });
-  }, [exam, year, subject, chapter, difficulty, questionType, searchQuery, showUnverified, shuffleMode]);
+  }, [exam, year, subject, chapter, difficulty, questionType, searchQuery, showUnverified, shuffleMode, resetQuestionState]);
 
   useEffect(() => {
     fetchQuestions();
   }, [fetchQuestions]);
 
-  // Timer Tick
-  useEffect(() => {
-    let interval: any = null;
-    if (timerActive && !submitted) {
-      interval = setInterval(() => {
-        setSeconds((prev) => prev + 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [timerActive, submitted]);
+  const currentQ = questions[currentIndex];
+  const options: string[] = useMemo(() => {
+    return currentQ?.options_json ? JSON.parse(currentQ.options_json) : [];
+  }, [currentQ]);
 
-  // Scroll to bottom of AI chat
-  useEffect(() => {
-    if (aiDrawerOpen && chatScrollRef.current) {
-      chatScrollRef.current.scrollTop = chatScrollRef.current.scrollHeight;
-    }
-  }, [chatMessages, aiDrawerOpen]);
-
+  // Touch Swipe Handlers
   const handleNext = useCallback(() => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prev) => prev + 1);
       resetQuestionState();
       playSound("click");
     }
-  }, [currentIndex, questions.length]);
+  }, [currentIndex, questions.length, resetQuestionState]);
 
   const handlePrev = useCallback(() => {
     if (currentIndex > 0) {
@@ -226,8 +233,35 @@ export default function PracticePage() {
       resetQuestionState();
       playSound("click");
     }
-  }, [currentIndex]);
+  }, [currentIndex, resetQuestionState]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartRef.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartRef.current === null) return;
+    const diff = touchStartRef.current - e.changedTouches[0].clientX;
+    touchStartRef.current = null;
+    if (diff > 60) {
+      handleNext();
+    } else if (diff < -60) {
+      handlePrev();
+    }
+  };
+
+  const handleJumpRandom = () => {
+    if (questions.length > 1) {
+      let randIdx = Math.floor(Math.random() * questions.length);
+      if (randIdx === currentIndex) {
+        randIdx = (currentIndex + 1) % questions.length;
+      }
+      setCurrentIndex(randIdx);
+      resetQuestionState();
+    }
+  };
+
+  // Audio Speech (TTS)
   const handleToggleSpeakQuestion = () => {
     if (speakingQ) {
       SpeechSpeaker.stop();
@@ -255,35 +289,6 @@ export default function PracticePage() {
     }
   };
 
-  // Mobile Touch Swipe Handlers
-  const handleTouchStart = (e: React.TouchEvent) => {
-    touchStartRef.current = e.touches[0].clientX;
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartRef.current === null) return;
-    const diff = touchStartRef.current - e.changedTouches[0].clientX;
-    touchStartRef.current = null;
-    if (diff > 60) {
-      handleNext();
-    } else if (diff < -60) {
-      handlePrev();
-    }
-  };
-
-  const handleJumpRandom = () => {
-    if (questions.length > 1) {
-      let randIdx = Math.floor(Math.random() * questions.length);
-      if (randIdx === currentIndex) {
-        randIdx = (currentIndex + 1) % questions.length;
-      }
-      setCurrentIndex(randIdx);
-      resetQuestionState();
-    }
-  };
-
-  const currentQ = questions[currentIndex];
-
   // Open Sarthi AI Drawer & Load Chat History
   const openAiChat = () => {
     if (!currentQ) return;
@@ -296,12 +301,11 @@ export default function PracticePage() {
         if (data.history && data.history.length > 0) {
           setChatMessages(data.history);
         } else {
-          // Initialize welcoming greeting
           setChatMessages([
             {
               id: "intro",
               role: "assistant",
-              message: `👋 **Namaste! I'm Sarthi, your friendly AI mentor.**\n\nNo question is silly here. I'm specially instructed to explain concepts from absolute scratch without heavy jargon.\n\nAsk me anything about **Q.${currentQ.question_number} (${currentQ.chapter})**, or tap one of the quick buttons below!`
+              message: `👋 **Namaste! I'm Sarthi, your friendly AI mentor.**\n\nNo question is silly here. I explain concepts from absolute scratch without heavy jargon.\n\nAsk me anything about **Q.${currentQ.question_number} (${currentQ.chapter})**, or tap one of the quick buttons below!`
             }
           ]);
         }
@@ -313,7 +317,7 @@ export default function PracticePage() {
       });
   };
 
-  // Send message to Sarthi AI with real-time SSE streaming
+  // Send message to Sarthi AI with SSE streaming
   const handleSendAiMessage = async (msgToSend?: string) => {
     const text = (msgToSend || chatInput).trim();
     if (!text || !currentQ || chatLoading) return;
@@ -422,7 +426,6 @@ export default function PracticePage() {
         correct = userAns === correctTarget;
       }
     } else {
-      // For MCQ: matches either option text, index letter (A, B, C, D), or option text at letter index
       const selectedIdx = options.findIndex((o) => o === selectedOption);
       const selectedLetter = selectedIdx >= 0 ? String.fromCharCode(65 + selectedIdx).toLowerCase() : "";
       const letterIndexMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
@@ -462,12 +465,12 @@ export default function PracticePage() {
         question_id: currentQ.id,
         selected_answer: ans,
         is_correct: correct,
-        time_taken_sec: seconds,
+        time_taken_sec: secondsRef.current,
         bookmarked: bookmarked,
       }),
     }).catch(console.error);
 
-    // Update user stats & streak & XP
+    // Update user stats
     fetch("/api/user", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -479,7 +482,6 @@ export default function PracticePage() {
       .then((res) => res.json())
       .then(() => {
         loadUserStats();
-        // Trigger celebratory toast
         if (correct) {
           setXpToast({
             show: true,
@@ -489,7 +491,7 @@ export default function PracticePage() {
         } else {
           setXpToast({
             show: true,
-            msg: "+5 XP for trying! Check the common mistake below to master this concept.",
+            msg: "+5 XP for trying! Check the solution to master this concept.",
             positive: false,
           });
         }
@@ -509,22 +511,34 @@ export default function PracticePage() {
           question_id: currentQ.id,
           selected_answer: selectedOption || numericalInput || null,
           is_correct: isCorrect,
-          time_taken_sec: seconds,
+          time_taken_sec: secondsRef.current,
           bookmarked: nextVal,
         }),
       }).catch(console.error);
     }
   };
 
-  const formatTime = (totalSec: number) => {
-    const m = Math.floor(totalSec / 60);
-    const s = totalSec % 60;
-    return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
+  // Count active non-default filters
+  const activeFiltersCount =
+    (exam !== "All" ? 1 : 0) +
+    (year !== "All" ? 1 : 0) +
+    (chapter !== "All" ? 1 : 0) +
+    (difficulty !== "All" ? 1 : 0) +
+    (questionType !== "All" ? 1 : 0) +
+    (showUnverified ? 1 : 0);
+
+  const handleResetFilters = () => {
+    setExam("All");
+    setYear("All");
+    setSubject("All");
+    setChapter("All");
+    setDifficulty("All");
+    setQuestionType("All");
+    setShowUnverified(false);
+    setRawSearchInput("");
   };
 
-  const options: string[] = currentQ?.options_json ? JSON.parse(currentQ.options_json) : [];
-
-  // Desktop Keyboard Shortcuts
+  // Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const activeEl = document.activeElement;
@@ -566,333 +580,243 @@ export default function PracticePage() {
   }, [submitted, options, handleNext, handlePrev, handleSubmitAnswer]);
 
   return (
-    <div className="space-y-3.5 pb-16">
-      {/* 1. PSYCHOLOGY & RETENTION BANNER (Streaks, XP, Road to 60 Correct) */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950/80 to-slate-900 border border-indigo-900/50 rounded-xl p-3 shadow-lg relative overflow-hidden">
+    <div className="space-y-3 pb-8">
+      {/* 1. RETENTION STATS CARD (Flat, No blur or heavy gradient) */}
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2 relative">
         {xpToast.show && (
           <div
-            className={`absolute inset-x-2 top-2 z-20 py-1.5 px-3 rounded-lg text-xs font-bold text-center animate-bounce shadow-md ${
+            className={`absolute inset-x-2 top-2 z-20 py-1.5 px-3 rounded-lg text-xs font-bold text-center border shadow ${
               xpToast.positive
-                ? "bg-emerald-500 text-slate-950 border border-emerald-400"
-                : "bg-amber-500 text-slate-950 border border-amber-400"
+                ? "bg-emerald-600 text-white border-emerald-500"
+                : "bg-amber-600 text-white border-amber-500"
             }`}
           >
             {xpToast.msg}
           </div>
         )}
 
-        <div className="flex items-center justify-between text-xs pb-2 border-b border-indigo-900/40">
+        <div className="flex items-center justify-between text-xs pb-1.5 border-b border-slate-800">
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1 font-extrabold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
-              <Flame size={14} className="animate-pulse" />
-              <span>{user?.streak_days || 3} Day Streak</span>
-            </div>
-            <div className="flex items-center gap-1 font-bold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded-full border border-sky-500/20">
-              <Zap size={13} />
-              <span>{user?.total_xp || 240} XP</span>
-            </div>
+            <span className="flex items-center gap-1 font-bold text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded border border-amber-500/20">
+              <Flame size={13} /> {user?.streak_days || 3}d Streak
+            </span>
+            <span className="flex items-center gap-1 font-bold text-sky-400 bg-sky-500/10 px-2 py-0.5 rounded border border-sky-500/20">
+              <Zap size={13} /> {user?.total_xp || 240} XP
+            </span>
           </div>
-
-          <div className="text-[10px] font-bold text-indigo-300 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
+          <span className="text-[10px] font-semibold text-slate-400 bg-slate-800 px-2 py-0.5 rounded border border-slate-700">
             {user?.level || "Super 60 Ranker"}
-          </div>
+          </span>
         </div>
 
-        {/* Road to 60 Correct Questions (240+ Marks) Target Bar */}
-        <div className="pt-2 space-y-1">
+        {/* Target 60 Bar */}
+        <div className="space-y-1">
           <div className="flex items-center justify-between text-[11px]">
-            <span className="font-bold text-slate-200 flex items-center gap-1">
-              <Target size={12} className="text-emerald-400" />
-              <span>Target: 60 Correct Questions</span>
+            <span className="font-semibold text-slate-200 flex items-center gap-1">
+              <Target size={12} className="text-sky-400" /> Target: 60 Correct
             </span>
-            <span className="text-emerald-400 font-bold">
+            <span className="text-sky-400 font-bold">
               {user?.total_correct || 0} / 60 ({user?.progressTo60 || 0}%)
             </span>
           </div>
-          <div className="w-full bg-slate-950 h-2 rounded-full overflow-hidden border border-slate-800">
+          <div className="w-full bg-slate-950 h-1.5 rounded-full overflow-hidden border border-slate-800">
             <div
-              className="bg-gradient-to-r from-sky-500 via-indigo-500 to-emerald-400 h-full rounded-full transition-all duration-500"
+              className="bg-sky-500 h-full rounded-full transition-all duration-300"
               style={{ width: `${Math.max(user?.progressTo60 || 0, 5)}%` }}
             />
-          </div>
-          <div className="flex justify-between text-[10px] text-slate-400">
-            <span>Accuracy: {user?.accuracy || 0}%</span>
-            <span className="text-emerald-400 font-medium">Goal: 240+ Marks (99.5+ %ile)</span>
           </div>
         </div>
       </div>
 
-      {/* 2. MODE SWITCHES: No-Pen Mode & Shuffle Controls */}
-      <div className="flex items-center justify-between gap-2 bg-slate-900 border border-slate-800 p-2 rounded-xl text-xs">
-        {/* No-Pen Mode Toggle */}
-        <button
-          onClick={() => setNoPenMode(!noPenMode)}
-          className={`flex-1 py-1.5 px-2.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all text-xs border ${
-            noPenMode
-              ? "bg-amber-500/20 border-amber-500 text-amber-300 shadow-sm shadow-amber-500/20"
-              : "bg-slate-950 border-slate-700 text-slate-400 hover:text-slate-200"
-          }`}
-          title="Learn questions without pen and paper via mental elimination"
-        >
-          <Brain size={14} className={noPenMode ? "text-amber-400" : ""} />
-          <span>No-Pen Mode</span>
-          <span
-            className={`text-[9px] px-1.5 py-0.2 rounded font-extrabold uppercase ${
-              noPenMode ? "bg-amber-500 text-slate-950" : "bg-slate-800 text-slate-400"
-            }`}
-          >
-            {noPenMode ? "ON" : "OFF"}
-          </span>
-        </button>
-
-        {/* Shuffle Mode Toggle */}
-        <button
-          onClick={() => setShuffleMode(!shuffleMode)}
-          className={`flex-1 py-1.5 px-2.5 rounded-lg font-bold flex items-center justify-center gap-1.5 transition-all text-xs border ${
-            shuffleMode
-              ? "bg-sky-500/20 border-sky-500 text-sky-300 shadow-sm shadow-sky-500/20"
-              : "bg-slate-950 border-slate-700 text-slate-400 hover:text-slate-200"
-          }`}
-          title="Randomize question sequence across all years"
-        >
-          <Shuffle size={14} className={shuffleMode ? "text-sky-400" : ""} />
-          <span>Shuffle</span>
-          <span
-            className={`text-[9px] px-1.5 py-0.2 rounded font-extrabold uppercase ${
-              shuffleMode ? "bg-sky-500 text-slate-950" : "bg-slate-800 text-slate-400"
-            }`}
-          >
-            {shuffleMode ? "ON" : "OFF"}
-          </span>
-        </button>
-
-        {/* Quick Random Jump Button */}
-        <button
-          onClick={handleJumpRandom}
-          className="p-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg border border-slate-700 transition-colors"
-          title="Jump to a random question"
-        >
-          <RotateCcw size={15} />
-        </button>
-      </div>
-
-      {/* 3. FILTERS CARD */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 shadow-lg space-y-2.5">
+      {/* 2. MINIMAL FILTER CONTROLS (< 3 on-screen controls) */}
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2.5">
+        {/* Row 1: Search + Filter Button */}
         <div className="flex items-center gap-2">
           <div className="relative flex-1">
             <Search className="absolute left-2.5 top-2.5 text-slate-500" size={14} />
             <input
               type="text"
-              placeholder="Search topic or keyword (e.g. Kirchhoff, Carnot, Matrix)..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-8 pr-3 py-1.5 text-xs bg-slate-950 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-sky-500"
+              placeholder="Search keyword (e.g. Kirchhoff, Carnot)..."
+              value={rawSearchInput}
+              onChange={(e) => setRawSearchInput(e.target.value)}
+              className="w-full pl-8 pr-8 py-2 text-xs bg-slate-950 border border-slate-700 rounded-lg text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500"
             />
+            {rawSearchInput && (
+              <button
+                onClick={() => setRawSearchInput("")}
+                className="absolute right-2.5 top-2.5 text-slate-500 hover:text-white"
+                aria-label="Clear search"
+              >
+                <X size={14} />
+              </button>
+            )}
           </div>
+
           <button
-            onClick={() => setShowUnverified(!showUnverified)}
-            title="Toggle unverified questions"
-            className={`px-2 py-1.5 text-xs rounded-lg border flex items-center gap-1 transition-colors ${
-              showUnverified
-                ? "bg-amber-500/20 border-amber-500/50 text-amber-300"
-                : "bg-slate-800 border-slate-700 text-slate-400"
+            onClick={() => setFilterModalOpen(true)}
+            className={`px-3 py-2 text-xs font-semibold rounded-lg border flex items-center gap-1.5 transition-colors ${
+              activeFiltersCount > 0
+                ? "bg-sky-600 text-white border-sky-500"
+                : "bg-slate-800 hover:bg-slate-700 text-slate-300 border-slate-700"
             }`}
           >
-            {showUnverified ? <Eye size={13} /> : <EyeOff size={13} />}
+            <SlidersHorizontal size={13} />
+            <span>Filters</span>
+            {activeFiltersCount > 0 && (
+              <span className="w-4 h-4 rounded-full bg-white text-slate-950 text-[10px] font-extrabold flex items-center justify-center">
+                {activeFiltersCount}
+              </span>
+            )}
           </button>
         </div>
 
-        {/* Dropdowns Row */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-xs">
-          <div>
-            <label className="text-[10px] text-slate-400 block mb-0.5 font-medium">Exam</label>
-            <select
-              value={exam}
-              onChange={(e) => setExam(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-md py-1 px-1.5 text-slate-300 focus:border-sky-500 font-semibold truncate"
-            >
-              <option value="All">All Exams (1,005 Qs)</option>
-              <option value="JEE Main">JEE Main</option>
-              <option value="TS EAMCET">TS EAMCET</option>
-              <option value="BITSAT">BITSAT</option>
-              <option value="VITEEE">VITEEE</option>
-              <option value="MathonGo JEE Main">MathonGo JEE</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="text-[10px] text-slate-400 block mb-0.5 font-medium">Year</label>
-            <select
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-md py-1 px-1.5 text-slate-300 focus:border-sky-500 font-semibold"
-            >
-              <option value="All">All Years (2002–2026)</option>
-              <option value="2026">2026 (All Shifts)</option>
-              <option value="2025">2025</option>
-              <option value="2024">2024</option>
-              <option value="2023">2023</option>
-              <option value="2022">2022</option>
-              <option value="2021">2021</option>
-              <option value="2020">2020</option>
-              <option value="2019">2019</option>
-              <option value="2018">2018</option>
-              <option value="2015">2015</option>
-              <option value="2008">2008</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="text-[10px] text-slate-400 block mb-0.5 font-medium">Subject</label>
-            <select
-              value={subject}
-              onChange={(e) => {
-                setSubject(e.target.value);
+        {/* Row 2: Subject Chips (All / Physics / Chemistry / Mathematics) */}
+        <div className="grid grid-cols-4 gap-1 p-0.5 bg-slate-950 border border-slate-800 rounded-lg text-xs">
+          {(["All", "Physics", "Chemistry", "Mathematics"] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => {
+                setSubject(s);
                 setChapter("All");
               }}
-              className="w-full bg-slate-950 border border-slate-700 rounded-md py-1 px-1.5 text-slate-300 focus:border-sky-500 font-semibold"
+              className={`py-1.5 text-center font-semibold rounded-md transition-colors ${
+                subject === s
+                  ? "bg-sky-600 text-white"
+                  : "text-slate-400 hover:text-slate-200"
+              }`}
             >
-              <option value="All">All Subjects</option>
-              <option value="Physics">Physics</option>
-              <option value="Chemistry">Chemistry</option>
-              <option value="Mathematics">Mathematics</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="text-[10px] text-slate-400 block mb-0.5 font-medium">Chapter</label>
-            <select
-              value={chapter}
-              onChange={(e) => setChapter(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-md py-1 px-1.5 text-slate-300 focus:border-sky-500 truncate"
-            >
-              <option value="All">All Chapters</option>
-              {chaptersList
-                .filter((c) => subject === "All" || c.subject === subject)
-                .map((c) => (
-                  <option key={c.name} value={c.name}>
-                    {c.name}
-                  </option>
-                ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="text-[10px] text-slate-400 block mb-0.5 font-medium">Difficulty</label>
-            <select
-              value={difficulty}
-              onChange={(e) => setDifficulty(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-md py-1 px-1.5 text-slate-300 focus:border-sky-500"
-            >
-              <option value="All">All Levels</option>
-              <option value="Easy">Easy (High Accuracy)</option>
-              <option value="Medium">Medium</option>
-              <option value="Hard">Hard</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="text-[10px] text-slate-400 block mb-0.5 font-medium">Type</label>
-            <select
-              value={questionType}
-              onChange={(e) => setQuestionType(e.target.value)}
-              className="w-full bg-slate-950 border border-slate-700 rounded-md py-1 px-1.5 text-slate-300 focus:border-sky-500"
-            >
-              <option value="All">All Types</option>
-              <option value="MCQ">MCQ</option>
-              <option value="NUMERICAL">Numerical</option>
-            </select>
-          </div>
+              {s === "Mathematics" ? "Maths" : s}
+            </button>
+          ))}
         </div>
 
-        {/* Counter Strip */}
-        <div className="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
-          <div className="flex items-center gap-2">
-            <span>
-              Database: <strong className="text-sky-400">{totalCount}</strong> questions
+        {/* Row 3: Utility Toggles (No-Pen, Shuffle, Random Jump, Print) */}
+        <div className="flex items-center justify-between gap-1.5 pt-1 text-xs">
+          <button
+            onClick={() => setNoPenMode(!noPenMode)}
+            className={`flex-1 py-1 px-2 rounded-lg font-semibold flex items-center justify-center gap-1 text-[11px] border transition-colors ${
+              noPenMode
+                ? "bg-amber-500/20 border-amber-500 text-amber-300"
+                : "bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Brain size={12} />
+            <span>No-Pen</span>
+            <span className={`text-[9px] px-1 rounded ${noPenMode ? "bg-amber-500 text-slate-950 font-bold" : "text-slate-500"}`}>
+              {noPenMode ? "ON" : "OFF"}
             </span>
-            <button
-              onClick={() => setShowPrintModal(true)}
-              className="px-2 py-0.5 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 flex items-center gap-1 text-[10px] transition-colors"
-              title="Print or export current question practice sheet"
-            >
-              <Printer size={11} /> Print Sheet
-            </button>
-          </div>
-          {questions.length > 0 && (
-            <span>
-              Question <strong className="text-white">{currentIndex + 1}</strong> of{" "}
-              {questions.length}
+          </button>
+
+          <button
+            onClick={() => setShuffleMode(!shuffleMode)}
+            className={`flex-1 py-1 px-2 rounded-lg font-semibold flex items-center justify-center gap-1 text-[11px] border transition-colors ${
+              shuffleMode
+                ? "bg-sky-500/20 border-sky-500 text-sky-300"
+                : "bg-slate-950 border-slate-800 text-slate-400 hover:text-slate-200"
+            }`}
+          >
+            <Shuffle size={12} />
+            <span>Shuffle</span>
+            <span className={`text-[9px] px-1 rounded ${shuffleMode ? "bg-sky-500 text-slate-950 font-bold" : "text-slate-500"}`}>
+              {shuffleMode ? "ON" : "OFF"}
             </span>
-          )}
+          </button>
+
+          <button
+            onClick={handleJumpRandom}
+            className="p-1.5 bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg border border-slate-800 transition-colors"
+            title="Jump to random question"
+            aria-label="Random question"
+          >
+            <RotateCcw size={13} />
+          </button>
+
+          <button
+            onClick={() => setShowPrintModal(true)}
+            className="p-1.5 bg-slate-950 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg border border-slate-800 transition-colors"
+            title="Print practice sheet"
+            aria-label="Print practice sheet"
+          >
+            <Printer size={13} />
+          </button>
         </div>
       </div>
 
-      {/* 4. MAIN QUESTION PRACTICE CARD */}
+      {/* Filter Bottom Sheet Modal */}
+      <PracticeFilterModal
+        isOpen={filterModalOpen}
+        onClose={() => setFilterModalOpen(false)}
+        exam={exam}
+        setExam={setExam}
+        year={year}
+        setYear={setYear}
+        subject={subject}
+        setSubject={setSubject}
+        chapter={chapter}
+        setChapter={setChapter}
+        difficulty={difficulty}
+        setDifficulty={setDifficulty}
+        questionType={questionType}
+        setQuestionType={setQuestionType}
+        showUnverified={showUnverified}
+        setShowUnverified={setShowUnverified}
+        chaptersList={chaptersList}
+        onReset={handleResetFilters}
+      />
+
+      {/* 3. MAIN QUESTION PRACTICE CARD */}
       {loading ? (
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center text-slate-400 animate-pulse text-xs">
-          Loading questions & LaTeX formulas...
+        <div className="space-y-3">
+          <div className="h-44 bg-slate-900 border border-slate-800 rounded-xl p-4 animate-pulse space-y-3">
+            <div className="h-4 bg-slate-800 rounded w-1/3" />
+            <div className="h-4 bg-slate-800 rounded w-full" />
+            <div className="h-4 bg-slate-800 rounded w-5/6" />
+          </div>
+          <div className="space-y-2">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="h-12 bg-slate-900 border border-slate-800 rounded-xl animate-pulse" />
+            ))}
+          </div>
         </div>
       ) : !currentQ ? (
         <div className="bg-slate-900 border border-slate-800 rounded-xl p-8 text-center space-y-2">
           <p className="text-slate-300 font-semibold text-sm">No questions match your filter.</p>
           <p className="text-xs text-slate-500">Try selecting &quot;All Subjects&quot; or clearing search.</p>
+          <button
+            onClick={handleResetFilters}
+            className="mt-2 px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold inline-block"
+          >
+            Reset Filters
+          </button>
         </div>
       ) : (
         <div
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
-          className="bg-slate-900 border border-slate-800 rounded-xl shadow-xl overflow-hidden transition-all"
+          className="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden"
         >
           {/* Top Bar with Tags and Timer */}
-          <div className="bg-slate-950/90 px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs">
+          <div className="bg-slate-950 px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs">
             <div className="flex items-center gap-1.5 flex-wrap">
-              {/* Exam Badge */}
-              <span
-                className={`font-bold px-2 py-0.5 rounded text-[11px] border ${
-                  currentQ.exam_name === "TS EAMCET"
-                    ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-                    : currentQ.exam_name === "BITSAT"
-                    ? "bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-500/30"
-                    : currentQ.exam_name === "VITEEE"
-                    ? "bg-amber-500/20 text-amber-300 border-amber-500/30"
-                    : currentQ.exam_name === "MathonGo JEE Main"
-                    ? "bg-cyan-500/20 text-cyan-300 border-cyan-500/30"
-                    : "bg-sky-500/20 text-sky-300 border-sky-500/30"
-                }`}
-              >
+              <span className="font-bold px-2 py-0.5 rounded text-[10px] bg-sky-500/10 text-sky-300 border border-sky-500/20">
                 {currentQ.exam_name || "JEE Main"}
               </span>
 
-              <span
-                className={`font-bold px-2 py-0.5 rounded text-[11px] ${
-                  currentQ.subject === "Physics"
-                    ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
-                    : currentQ.subject === "Chemistry"
-                    ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
-                    : "bg-purple-500/20 text-purple-300 border border-purple-500/30"
-                }`}
-              >
+              <span className="font-semibold px-2 py-0.5 rounded text-[10px] bg-slate-800 text-slate-300 border border-slate-700">
                 {currentQ.subject}
               </span>
 
-              <span className="bg-slate-800 text-slate-300 px-2 py-0.5 rounded text-[11px] border border-slate-700">
+              <span className="bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded text-[10px] border border-slate-700">
                 {currentQ.question_type}
               </span>
 
-              <span className="text-slate-400 text-[11px] font-mono">
+              <span className="text-slate-400 text-[10px] font-mono">
                 Q.{currentQ.question_number}
               </span>
 
-              {currentQ.explanation?.verified_against_key === false && (
-                <span className="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1 border border-amber-500/30">
-                  <AlertTriangle size={11} /> Flagged
-                </span>
-              )}
-
               {Boolean(currentQ.needs_review) && (
                 <span className="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded text-[10px] flex items-center gap-1 border border-amber-500/30">
-                  <AlertTriangle size={11} /> Needs Review
+                  <AlertTriangle size={10} /> Flagged
                 </span>
               )}
             </div>
@@ -903,64 +827,67 @@ export default function PracticePage() {
                 onClick={handleToggleSpeakQuestion}
                 className={`p-1.5 rounded-lg border text-xs transition-colors ${
                   speakingQ
-                    ? "bg-indigo-600 text-white border-indigo-500 animate-pulse"
+                    ? "bg-sky-600 text-white border-sky-500"
                     : "bg-slate-800 text-slate-400 hover:text-white border-slate-700"
                 }`}
-                title={speakingQ ? "Stop voice" : "Listen to question aloud"}
+                title={speakingQ ? "Stop voice" : "Listen to question"}
+                aria-label="Audio question narration"
               >
-                {speakingQ ? <VolumeX size={14} /> : <Volume2 size={14} />}
+                {speakingQ ? <VolumeX size={13} /> : <Volume2 size={13} />}
               </button>
 
               {/* Keyboard Shortcuts Guide */}
               <button
                 onClick={() => setShowShortcutsModal(true)}
                 className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-400 hover:text-white text-xs transition-colors hidden sm:block"
-                title="Keyboard shortcuts (1-4, Enter, Arrows, ?, H, S)"
+                title="Keyboard shortcuts"
+                aria-label="Keyboard shortcuts"
               >
-                <Keyboard size={14} />
+                <Keyboard size={13} />
               </button>
 
               {/* Ask Sarthi AI Tutor Button */}
               <button
                 onClick={openAiChat}
-                className="flex items-center gap-1 text-[11px] font-bold bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-300 px-2 py-1 rounded-lg border border-indigo-500/40 transition-colors shadow-sm"
+                className="flex items-center gap-1 text-[11px] font-bold bg-sky-600/20 hover:bg-sky-600/30 text-sky-300 px-2 py-1 rounded-lg border border-sky-500/30 transition-colors"
+                aria-label="Ask Sarthi AI"
               >
-                <Sparkles size={13} className="text-indigo-400" />
+                <Sparkles size={12} className="text-sky-400" />
                 <span>Ask AI</span>
               </button>
 
-              {/* Timer Pill */}
-              <button
-                onClick={() => setTimerActive(!timerActive)}
-                className="flex items-center gap-1 text-[11px] font-mono bg-slate-800/80 hover:bg-slate-700/80 text-sky-300 px-2 py-0.5 rounded border border-slate-700"
-              >
-                <Timer size={12} className={timerActive && !submitted ? "animate-pulse" : ""} />
-                <span>{formatTime(seconds)}</span>
-              </button>
+              {/* Isolated Timer Component (does not re-render question card) */}
+              <PracticeTimer
+                active={timerActive && !submitted}
+                resetKey={currentIndex}
+                onTick={(sec) => {
+                  secondsRef.current = sec;
+                }}
+              />
 
               {/* Bookmark Toggle */}
               <button
                 onClick={toggleBookmark}
-                className="p-1 rounded text-slate-400 hover:text-amber-400 transition-colors"
+                className="p-1 text-slate-400 hover:text-amber-400 transition-colors"
                 aria-label="Bookmark question"
               >
                 {bookmarked ? (
-                  <BookmarkCheck size={18} className="text-amber-400" />
+                  <BookmarkCheck size={16} className="text-amber-400" />
                 ) : (
-                  <Bookmark size={18} />
+                  <Bookmark size={16} />
                 )}
               </button>
             </div>
           </div>
 
-          {/* Chapter / Shift Subheader */}
-          <div className="px-3.5 py-2 bg-slate-950/50 border-b border-slate-800/70 flex items-center justify-between text-[11px] text-slate-400">
-            <span className="truncate pr-2">
-              <strong className="text-slate-200">{currentQ.chapter}</strong>
+          {/* Chapter & Shift Subheader */}
+          <div className="px-3.5 py-2 bg-slate-950/50 border-b border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+            <span className="truncate pr-2 font-medium text-slate-300">
+              {currentQ.chapter}
               {currentQ.topic && ` • ${currentQ.topic}`}
             </span>
-            <span className="text-[10px] bg-slate-800/90 text-sky-300 font-semibold px-2 py-0.5 rounded whitespace-nowrap border border-slate-700">
-              {currentQ.exam_name || "JEE"} {currentQ.paper_year || 2026} • {currentQ.paper_date || "Official"} (Shift {currentQ.paper_shift || 1})
+            <span className="text-[10px] text-slate-400 whitespace-nowrap">
+              {currentQ.exam_name || "JEE"} {currentQ.paper_year || 2026}
             </span>
           </div>
 
@@ -981,15 +908,12 @@ export default function PracticePage() {
               </div>
             )}
 
-            {/* 🧠 NO-PEN MODE HIGHLIGHT CARD (Solve in 30 Seconds without paper) */}
+            {/* No-Pen Mental Shortcut */}
             {noPenMode && currentQ.explanation?.no_pen_trick && (
-              <div className="p-3 rounded-xl bg-amber-950/30 border border-amber-500/50 text-amber-200 space-y-1.5 animate-in fade-in">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-300 uppercase tracking-wide">
-                  <Brain size={14} className="text-amber-400" />
+              <div className="p-3 rounded-xl bg-amber-950/20 border border-amber-500/40 text-amber-200 space-y-1">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-amber-400">
+                  <Brain size={13} />
                   <span>30-Second No-Pen Mental Shortcut</span>
-                  <span className="text-[9px] bg-amber-500/20 text-amber-300 px-1.5 py-0.2 rounded border border-amber-500/30 ml-auto">
-                    Mental Elimination
-                  </span>
                 </div>
                 <div className="text-xs leading-relaxed text-amber-100 pl-4">
                   <LatexRenderer content={currentQ.explanation.no_pen_trick} />
@@ -997,30 +921,15 @@ export default function PracticePage() {
               </div>
             )}
 
-            {/* Needs Review Notice Banner */}
-            {Boolean(currentQ.needs_review) && (
-              <div className="p-2.5 rounded-lg bg-amber-950/20 border border-amber-500/30 text-[11px] text-amber-300 flex items-center gap-2">
-                <AlertTriangle size={14} className="text-amber-400 flex-shrink-0" />
-                <span>
-                  {!currentQ.image_url &&
-                  (currentQ.question_text_latex.toLowerCase().includes("figure") ||
-                    currentQ.question_text_latex.toLowerCase().includes("shown") ||
-                    currentQ.question_text_latex.toLowerCase().includes("diagram"))
-                    ? "Notice: This question references a figure/diagram that is flagged for review."
-                    : "Notice: Original source options are flagged for manual review."}
-                </span>
-              </div>
-            )}
-
-            {/* Options List for MCQ */}
+            {/* Options List for MCQ (Min 44px tap target) */}
             {currentQ.question_type === "MCQ" && (
-              <div className="space-y-2.5 pt-1">
+              <div className="space-y-2 pt-1">
                 {options.map((opt, idx) => {
-                  const letter = String.fromCharCode(65 + idx); // A, B, C, D
+                  const letter = String.fromCharCode(65 + idx);
                   const isSelected = selectedOption === opt || selectedOption === letter;
 
-                  let borderStyle = "border-slate-800 bg-slate-950/70 hover:border-slate-700";
-                  let badgeStyle = "bg-slate-800 text-slate-300";
+                  let borderStyle = "border-slate-800 bg-slate-950 hover:border-slate-700 text-slate-200";
+                  let badgeStyle = "bg-slate-800 text-slate-400";
 
                   if (submitted) {
                     const letterIndexMap: Record<string, number> = { a: 0, b: 1, c: 2, d: 3 };
@@ -1033,15 +942,15 @@ export default function PracticePage() {
                       (targetIdx !== undefined && idx === targetIdx);
 
                     if (isOfficialCorrect) {
-                      borderStyle = "border-emerald-500/80 bg-emerald-950/40 text-emerald-200";
-                      badgeStyle = "bg-emerald-500 text-slate-950 font-bold";
+                      borderStyle = "border-emerald-600 bg-emerald-950/40 text-emerald-200";
+                      badgeStyle = "bg-emerald-600 text-white font-bold";
                     } else if (isSelected) {
-                      borderStyle = "border-rose-500/80 bg-rose-950/40 text-rose-200";
-                      badgeStyle = "bg-rose-500 text-white font-bold";
+                      borderStyle = "border-rose-600 bg-rose-950/40 text-rose-200";
+                      badgeStyle = "bg-rose-600 text-white font-bold";
                     }
                   } else if (isSelected) {
-                    borderStyle = "border-sky-500 bg-sky-950/40 text-sky-200";
-                    badgeStyle = "bg-sky-500 text-slate-950 font-bold";
+                    borderStyle = "border-sky-500 bg-sky-950/40 text-sky-100";
+                    badgeStyle = "bg-sky-600 text-white font-bold";
                   }
 
                   return (
@@ -1049,14 +958,12 @@ export default function PracticePage() {
                       key={idx}
                       disabled={submitted}
                       onClick={() => setSelectedOption(opt)}
-                      className={`w-full text-left p-3 rounded-xl border flex items-start gap-3 transition-all break-words ${borderStyle}`}
+                      className={`w-full text-left p-3 min-h-[44px] rounded-xl border flex items-center gap-3 transition-colors ${borderStyle}`}
                     >
-                      <span
-                        className={`w-6 h-6 rounded-lg flex items-center justify-center text-xs flex-shrink-0 mt-0.5 ${badgeStyle}`}
-                      >
+                      <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs flex-shrink-0 font-bold ${badgeStyle}`}>
                         {letter}
                       </span>
-                      <div className="flex-1 text-xs sm:text-sm pt-0.5 min-w-0 overflow-x-auto leading-relaxed">
+                      <div className="flex-1 text-xs sm:text-sm min-w-0 overflow-x-auto leading-relaxed">
                         <LatexRenderer content={opt} />
                       </div>
                     </button>
@@ -1065,7 +972,7 @@ export default function PracticePage() {
               </div>
             )}
 
-            {/* Numerical Input Box for NUMERICAL */}
+            {/* Numerical Input Box */}
             {currentQ.question_type === "NUMERICAL" && (
               <div className="pt-2 space-y-2">
                 <label className="text-xs text-slate-400 block font-medium">
@@ -1084,7 +991,7 @@ export default function PracticePage() {
                   {!submitted && (
                     <button
                       onClick={handleSubmitAnswer}
-                      className="px-4 py-2 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-xs rounded-lg transition-colors"
+                      className="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs rounded-lg transition-colors"
                     >
                       Submit
                     </button>
@@ -1102,14 +1009,14 @@ export default function PracticePage() {
               </div>
             )}
 
-            {/* Submit Button for MCQ */}
+            {/* Primary Action Button (Submit Answer for MCQ) */}
             {currentQ.question_type === "MCQ" && !submitted && (
               <button
                 onClick={handleSubmitAnswer}
                 disabled={!selectedOption}
-                className={`w-full py-2.5 rounded-xl font-bold text-xs uppercase tracking-wider transition-all shadow-md ${
+                className={`w-full py-3 min-h-[44px] rounded-xl font-bold text-xs uppercase tracking-wider transition-colors ${
                   selectedOption
-                    ? "bg-gradient-to-r from-sky-500 to-indigo-600 hover:from-sky-400 hover:to-indigo-500 text-white cursor-pointer"
+                    ? "bg-sky-600 hover:bg-sky-500 text-white cursor-pointer"
                     : "bg-slate-800 text-slate-500 cursor-not-allowed"
                 }`}
               >
@@ -1120,60 +1027,60 @@ export default function PracticePage() {
             {/* Result Strip */}
             {submitted && (
               <div
-                className={`p-3 rounded-xl border flex items-center justify-between text-xs animate-in fade-in ${
+                className={`p-3 rounded-xl border flex items-center justify-between text-xs ${
                   isCorrect
-                    ? "bg-emerald-950/40 border-emerald-500/40 text-emerald-300"
-                    : "bg-rose-950/40 border-rose-500/40 text-rose-300"
+                    ? "bg-emerald-950/40 border-emerald-600/40 text-emerald-300"
+                    : "bg-rose-950/40 border-rose-600/40 text-rose-300"
                 }`}
               >
                 <div className="flex items-center gap-2">
                   {isCorrect ? (
-                    <CheckCircle2 size={18} className="text-emerald-400" />
+                    <CheckCircle2 size={16} className="text-emerald-400" />
                   ) : (
-                    <XCircle size={18} className="text-rose-400" />
+                    <XCircle size={16} className="text-rose-400" />
                   )}
                   <span className="font-semibold">
-                    {isCorrect ? "Correct! (+4 marks • 240+ Track)" : "Incorrect (-1 mark)"}
+                    {isCorrect ? "Correct (+4 marks)" : "Incorrect (-1 mark)"}
                   </span>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <button
                     onClick={openAiChat}
-                    className="text-xs font-bold text-indigo-300 hover:text-indigo-200 flex items-center gap-1 underline"
+                    className="text-xs font-bold text-sky-400 hover:underline flex items-center gap-1"
                   >
-                    <Sparkles size={12} /> Discuss with AI
+                    <Sparkles size={11} /> Ask Sarthi
                   </button>
                   <button
                     onClick={() => setShowSolution(!showSolution)}
                     className="underline font-semibold hover:text-white"
                   >
-                    {showSolution ? "Hide Teaching Solution" : "View Teaching Solution"}
+                    {showSolution ? "Hide Solution" : "View Solution"}
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Teaching Solution Section (Hint -> Approach -> Step-by-Step -> Concept -> Mistake) */}
+            {/* Teaching Solution Section */}
             {showSolution && currentQ.explanation && (
-              <div className="mt-4 pt-4 border-t border-slate-800 space-y-3.5">
+              <div className="mt-4 pt-4 border-t border-slate-800 space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5 text-xs font-bold text-sky-400 uppercase tracking-wider">
-                    <Sparkles size={14} />
-                    <span>Teaching-Style Explanation</span>
+                    <Sparkles size={13} />
+                    <span>Step-by-Step Solution</span>
                   </div>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={handleToggleSpeakSolution}
-                      className={`px-2 py-0.5 rounded text-[10px] font-bold border flex items-center gap-1 transition-colors ${
+                      className={`px-2 py-0.5 rounded text-[10px] font-semibold border flex items-center gap-1 transition-colors ${
                         speakingSol
-                          ? "bg-indigo-600 text-white border-indigo-500 animate-pulse"
+                          ? "bg-sky-600 text-white border-sky-500"
                           : "bg-slate-800 text-slate-300 hover:text-white border-slate-700"
                       }`}
                       title={speakingSol ? "Stop voice" : "Listen to full explanation"}
                     >
-                      {speakingSol ? <VolumeX size={12} /> : <Volume2 size={12} />}
-                      <span>{speakingSol ? "Stop Voice" : "Listen"}</span>
+                      {speakingSol ? <VolumeX size={11} /> : <Volume2 size={11} />}
+                      <span>{speakingSol ? "Stop" : "Listen"}</span>
                     </button>
                     <div className="text-[11px] text-slate-400 flex items-center gap-1">
                       <span>Official Key:</span>
@@ -1184,76 +1091,50 @@ export default function PracticePage() {
                   </div>
                 </div>
 
-                {/* 1. Hint (no spoiler) */}
-                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
-                  <div className="text-[11px] font-bold text-amber-400 flex items-center gap-1">
-                    <Lightbulb size={13} /> 1. Hint (Think on your own first)
+                {/* 1. Hint */}
+                {currentQ.explanation.hint && (
+                  <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <div className="text-[11px] font-bold text-amber-400 flex items-center gap-1">
+                      <Lightbulb size={12} /> 1. Hint
+                    </div>
+                    <div className="text-xs text-slate-300 leading-relaxed pl-3">
+                      <LatexRenderer content={currentQ.explanation.hint} />
+                    </div>
                   </div>
-                  <div className="text-xs text-slate-300 leading-relaxed pl-4">
-                    <LatexRenderer content={currentQ.explanation.hint} />
-                  </div>
-                </div>
+                )}
 
-                {/* 2. Approach (what to think first) */}
-                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
-                  <div className="text-[11px] font-bold text-sky-400 flex items-center gap-1">
-                    <Compass size={13} /> 2. Approach (First Principles)
+                {/* 2. Approach */}
+                {currentQ.explanation.approach && (
+                  <div className="p-3 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+                    <div className="text-[11px] font-bold text-sky-400 flex items-center gap-1">
+                      <Compass size={12} /> 2. Approach
+                    </div>
+                    <div className="text-xs text-slate-300 leading-relaxed pl-3">
+                      <LatexRenderer content={currentQ.explanation.approach} />
+                    </div>
                   </div>
-                  <div className="text-xs text-slate-300 leading-relaxed pl-4">
-                    <LatexRenderer content={currentQ.explanation.approach} />
-                  </div>
-                </div>
+                )}
 
-                {/* 3. Full Step-by-Step Solution */}
-                <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-2">
-                  <div className="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
-                    <FileCheck2 size={13} /> 3. Full Step-by-Step Solution
+                {/* 3. Full Solution */}
+                {currentQ.explanation.full_solution_latex && (
+                  <div className="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5">
+                    <div className="text-[11px] font-bold text-emerald-400 flex items-center gap-1">
+                      <FileCheck2 size={12} /> 3. Full Derivation
+                    </div>
+                    <div className="text-xs text-slate-200 leading-relaxed space-y-1.5">
+                      <LatexRenderer content={currentQ.explanation.full_solution_latex} />
+                    </div>
                   </div>
-                  <div className="text-xs text-slate-200 leading-relaxed space-y-2">
-                    <LatexRenderer content={currentQ.explanation.full_solution_latex} />
-                  </div>
-                </div>
+                )}
 
-                {/* 4. Concept Used */}
-                <div className="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-1">
-                  <div className="text-[11px] font-bold text-indigo-400 flex items-center gap-1">
-                    <HelpCircle size={13} /> 4. Concept Used
-                  </div>
-                  <div className="text-xs text-slate-300 pl-4">
-                    <LatexRenderer content={currentQ.explanation.concept_used} />
-                  </div>
-                </div>
-
-                {/* 5. Common Student Mistake */}
+                {/* 4. Common Mistake */}
                 {currentQ.explanation.common_mistake && (
                   <div className="p-3 rounded-xl bg-rose-950/20 border border-rose-900/40 space-y-1">
                     <div className="text-[11px] font-bold text-rose-400 flex items-center gap-1">
-                      <AlertTriangle size={13} /> 5. Common Student Mistake
+                      <AlertTriangle size={12} /> 4. Common Mistake
                     </div>
-                    <div className="text-xs text-slate-300 pl-4">
+                    <div className="text-xs text-slate-300 pl-3">
                       <LatexRenderer content={currentQ.explanation.common_mistake} />
-                    </div>
-                  </div>
-                )}
-
-                {/* 6. No-Pen Mental Shortcut in Solution */}
-                {currentQ.explanation.no_pen_trick && (
-                  <div className="p-3 rounded-xl bg-amber-950/20 border border-amber-900/40 space-y-1">
-                    <div className="text-[11px] font-bold text-amber-400 flex items-center gap-1">
-                      <Brain size={13} /> 6. 30-Second No-Pen Mental Shortcut
-                    </div>
-                    <div className="text-xs text-slate-300 pl-4">
-                      <LatexRenderer content={currentQ.explanation.no_pen_trick} />
-                    </div>
-                  </div>
-                )}
-
-                {/* 7. Similar Concept Tip */}
-                {currentQ.explanation.similar_concept_tip && (
-                  <div className="p-2.5 rounded-lg bg-sky-950/30 border border-sky-900/40 text-[11px] text-sky-300 flex items-start gap-2">
-                    <Sparkles size={13} className="flex-shrink-0 mt-0.5 text-sky-400" />
-                    <div className="flex-1">
-                      <LatexRenderer content={currentQ.explanation.similar_concept_tip} />
                     </div>
                   </div>
                 )}
@@ -1262,11 +1143,11 @@ export default function PracticePage() {
           </div>
 
           {/* Navigation Footer (Prev / Next) */}
-          <div className="px-4 py-3 bg-slate-950/90 border-t border-slate-800 flex items-center justify-between">
+          <div className="px-4 py-3 bg-slate-950 border-t border-slate-800 flex items-center justify-between">
             <button
               onClick={handlePrev}
               disabled={currentIndex === 0}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+              className={`flex items-center gap-1 px-3 py-2 min-h-[44px] rounded-lg text-xs font-semibold transition-colors ${
                 currentIndex === 0
                   ? "text-slate-600 cursor-not-allowed"
                   : "bg-slate-800 hover:bg-slate-700 text-slate-200"
@@ -1282,7 +1163,7 @@ export default function PracticePage() {
             <button
               onClick={handleNext}
               disabled={currentIndex >= questions.length - 1}
-              className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+              className={`flex items-center gap-1 px-4 py-2 min-h-[44px] rounded-lg text-xs font-semibold transition-colors ${
                 currentIndex >= questions.length - 1
                   ? "text-slate-600 cursor-not-allowed"
                   : "bg-sky-600 hover:bg-sky-500 text-white"
@@ -1294,78 +1175,70 @@ export default function PracticePage() {
         </div>
       )}
 
-      {/* 5. SARTHI AI TUTOR CHAT DRAWER */}
+      {/* 4. SARTHI AI TUTOR DRAWER */}
       {aiDrawerOpen && (
-        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex justify-end animate-in fade-in">
-          <div className="w-full max-w-md bg-slate-900 border-l border-slate-800 h-full flex flex-col shadow-2xl animate-in slide-in-from-right duration-200">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/70 flex justify-end animate-in fade-in"
+        >
+          <div className="w-full max-w-md bg-slate-900 border-l border-slate-800 h-full flex flex-col shadow-2xl">
             {/* Drawer Header */}
             <div className="p-3.5 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-indigo-500 to-sky-500 flex items-center justify-center text-white shadow-md">
-                  <Sparkles size={16} />
+                <div className="w-7 h-7 rounded-lg bg-sky-600 flex items-center justify-center text-white">
+                  <Sparkles size={14} />
                 </div>
                 <div>
-                  <h3 className="text-xs font-bold text-white flex items-center gap-1.5">
-                    Sarthi AI Beginner Mentor
-                    <span className="text-[9px] bg-emerald-500/20 text-emerald-400 px-1 py-0.2 rounded border border-emerald-500/30">
-                      Online
-                    </span>
-                  </h3>
-                  <p className="text-[10px] text-slate-400">
-                    Explains from scratch • No question is silly
-                  </p>
+                  <h3 className="text-xs font-bold text-white">Sarthi AI Mentor</h3>
+                  <p className="text-[10px] text-slate-400">Step-by-step guidance</p>
                 </div>
               </div>
               <button
                 onClick={() => setAiDrawerOpen(false)}
-                className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                aria-label="Close AI Mentor"
+                className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
               >
-                <X size={18} />
+                <X size={16} />
               </button>
             </div>
 
-            {/* Quick Doubt Starter Chips - 4-Step Blueprint */}
-            <div className="p-2.5 bg-slate-950/60 border-b border-slate-800/80 flex gap-1.5 overflow-x-auto text-[11px] no-scrollbar">
+            {/* Quick Starter Chips */}
+            <div className="p-2 bg-slate-950/60 border-b border-slate-800 flex gap-1.5 overflow-x-auto text-[11px] no-scrollbar">
               <button
                 onClick={() => handleSendAiMessage("Show me the Master Learning Blueprint for this concept")}
-                className="px-2.5 py-1 rounded-full bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 whitespace-nowrap border border-indigo-500/30 transition-colors flex items-center gap-1 font-bold"
+                className="px-2.5 py-1 rounded-full bg-sky-500/10 hover:bg-sky-500/20 text-sky-300 whitespace-nowrap border border-sky-500/30 transition-colors font-semibold"
               >
-                🗺️ Master Plan
+                🗺️ Blueprint
               </button>
               <button
                 onClick={() => handleSendAiMessage("Explain Step 1: Physical intuition from ground zero")}
-                className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-sky-300 whitespace-nowrap border border-slate-700 transition-colors flex items-center gap-1"
+                className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap border border-slate-700 transition-colors"
               >
                 🔹 Step 1: Intuition
               </button>
               <button
                 onClick={() => handleSendAiMessage("Explain Step 2: Show me the step-by-step mathematical derivation")}
-                className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-emerald-300 whitespace-nowrap border border-slate-700 transition-colors flex items-center gap-1"
+                className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap border border-slate-700 transition-colors"
               >
                 📐 Step 2: Derivation
               </button>
               <button
                 onClick={() => handleSendAiMessage("Explain Step 3: What common trap trips up students in this chapter?")}
-                className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-rose-300 whitespace-nowrap border border-slate-700 transition-colors flex items-center gap-1"
+                className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap border border-slate-700 transition-colors"
               >
                 ⚠️ Step 3: Traps
               </button>
               <button
                 onClick={() => handleSendAiMessage("Explain Step 4: Show me the 30-second no-pen mental shortcut")}
-                className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-amber-300 whitespace-nowrap border border-slate-700 transition-colors flex items-center gap-1"
+                className="px-2.5 py-1 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 whitespace-nowrap border border-slate-700 transition-colors"
               >
-                🧠 Step 4: 30s Shortcut
-              </button>
-              <button
-                onClick={() => handleSendAiMessage("Next step, please continue the explanation")}
-                className="px-3 py-1 rounded-full bg-sky-600 hover:bg-sky-500 text-white whitespace-nowrap transition-colors flex items-center gap-1 font-bold shadow-sm"
-              >
-                ⏭️ Next Step
+                🧠 Step 4: Shortcut
               </button>
             </div>
 
-            {/* Chat Messages List */}
-            <div ref={chatScrollRef} className="flex-1 overflow-y-auto p-3.5 space-y-3 text-xs">
+            {/* Chat Messages */}
+            <div ref={chatScrollRef} className="flex-1 overflow-y-auto p-3 space-y-3 text-xs">
               {chatMessages.map((msg, i) => (
                 <div
                   key={msg.id || i}
@@ -1374,10 +1247,10 @@ export default function PracticePage() {
                   }`}
                 >
                   <div
-                    className={`max-w-[88%] rounded-2xl p-3 leading-relaxed ${
+                    className={`max-w-[88%] rounded-xl p-3 leading-relaxed ${
                       msg.role === "user"
                         ? "bg-sky-600 text-white rounded-br-none"
-                        : "bg-slate-950 text-slate-200 border border-slate-800 rounded-bl-none shadow-sm"
+                        : "bg-slate-950 text-slate-200 border border-slate-800 rounded-bl-none"
                     }`}
                   >
                     <LatexRenderer content={msg.message} />
@@ -1391,12 +1264,12 @@ export default function PracticePage() {
               {chatLoading && (
                 <div className="flex items-center gap-2 text-slate-400 text-xs p-2">
                   <div className="w-2 h-2 rounded-full bg-sky-500 animate-ping" />
-                  <span>Sarthi is thinking simply...</span>
+                  <span>Sarthi is thinking...</span>
                 </div>
               )}
             </div>
 
-            {/* Chat Input Bar */}
+            {/* Chat Input */}
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -1409,12 +1282,13 @@ export default function PracticePage() {
                 placeholder="Ask Sarthi anything about this question..."
                 value={chatInput}
                 onChange={(e) => setChatInput(e.target.value)}
-                className="flex-1 px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                className="flex-1 px-3 py-2 text-xs bg-slate-900 border border-slate-700 rounded-xl text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500"
               />
               <button
                 type="submit"
                 disabled={!chatInput.trim() || chatLoading}
-                className="p-2 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-xl transition-colors"
+                aria-label="Send message"
+                className="p-2 bg-sky-600 hover:bg-sky-500 disabled:opacity-50 text-white rounded-xl transition-colors min-h-[38px] min-w-[38px] flex items-center justify-center"
               >
                 <Send size={15} />
               </button>
@@ -1425,12 +1299,16 @@ export default function PracticePage() {
 
       {/* Keyboard Shortcuts Modal */}
       {showShortcutsModal && (
-        <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl space-y-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center p-4 animate-in fade-in"
+        >
+          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-xl">
             <div className="flex items-center justify-between border-b border-slate-800 pb-2">
               <div className="flex items-center gap-2">
-                <Keyboard size={18} className="text-sky-400" />
-                <h3 className="font-bold text-sm text-white">Keyboard & Touch Shortcuts</h3>
+                <Keyboard size={16} className="text-sky-400" />
+                <h3 className="font-bold text-sm text-white">Shortcuts Guide</h3>
               </div>
               <button
                 onClick={() => setShowShortcutsModal(false)}
@@ -1440,30 +1318,26 @@ export default function PracticePage() {
               </button>
             </div>
 
-            <div className="space-y-2 text-xs text-slate-300">
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80">
+            <div className="space-y-1.5 text-xs text-slate-300">
+              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800">
                 <span>Select Option A, B, C, D</span>
-                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-amber-300 text-[11px] font-bold">1, 2, 3, 4 / A, B, C, D</span>
+                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-sky-400 font-bold">1–4 / A–D</span>
               </div>
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80">
+              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800">
                 <span>Submit / Check Answer</span>
-                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-sky-300 text-[11px] font-bold">Enter</span>
+                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-sky-400 font-bold">Enter</span>
               </div>
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80">
+              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800">
                 <span>Next / Previous Question</span>
-                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300 text-[11px] font-bold">→ / ←</span>
+                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300 font-bold">→ / ←</span>
               </div>
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80">
+              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800">
                 <span>Toggle Hint & Solution</span>
-                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-indigo-300 text-[11px] font-bold">H / S</span>
+                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300 font-bold">H / S</span>
               </div>
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80">
+              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800">
                 <span>Toggle No-Pen 30s Mode</span>
-                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-emerald-300 text-[11px] font-bold">N</span>
-              </div>
-              <div className="flex items-center justify-between p-2 rounded-lg bg-slate-950 border border-slate-800/80">
-                <span>Mobile Touch Swipe</span>
-                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-slate-300 text-[11px] font-bold">Swipe Left / Right</span>
+                <span className="font-mono bg-slate-800 px-2 py-0.5 rounded text-amber-300 font-bold">N</span>
               </div>
             </div>
 
@@ -1471,25 +1345,29 @@ export default function PracticePage() {
               onClick={() => setShowShortcutsModal(false)}
               className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs transition-colors"
             >
-              Got it!
+              Done
             </button>
           </div>
         </div>
       )}
 
-      {/* Printable Practice Sheet Modal */}
+      {/* Printable Sheet Modal */}
       {showPrintModal && (
-        <div className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 animate-in fade-in">
-          <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-2xl flex flex-col max-h-[90vh] space-y-4">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div
+          role="dialog"
+          aria-modal="true"
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3 sm:p-6 animate-in fade-in"
+        >
+          <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col max-h-[90vh] space-y-3">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-2">
               <div className="flex items-center gap-2">
-                <Printer size={18} className="text-sky-400" />
-                <h3 className="font-bold text-sm text-white">Printable Question Practice Sheet</h3>
+                <Printer size={16} className="text-sky-400" />
+                <h3 className="font-bold text-sm text-white">Printable Practice Sheet</h3>
               </div>
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => window.print()}
-                  className="px-3 py-1 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1.5 transition-colors"
+                  className="px-3 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs flex items-center gap-1.5 transition-colors"
                 >
                   <Printer size={13} /> Print / Save PDF
                 </button>
@@ -1502,8 +1380,7 @@ export default function PracticePage() {
               </div>
             </div>
 
-            {/* Printable Content Container */}
-            <div className="flex-1 overflow-y-auto space-y-4 pr-1 text-xs text-slate-200">
+            <div className="flex-1 overflow-y-auto space-y-3 pr-1 text-xs text-slate-200">
               <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-center space-y-1">
                 <h2 className="font-bold text-sm text-white">ExamPrep PYQ Practice Worksheet</h2>
                 <p className="text-[11px] text-slate-400">
@@ -1514,7 +1391,7 @@ export default function PracticePage() {
               {questions.slice(0, 15).map((q, qIndex) => {
                 const qOpts: string[] = q.options_json ? JSON.parse(q.options_json) : [];
                 return (
-                  <div key={q.id} className="p-3.5 bg-slate-950/70 rounded-xl border border-slate-800 space-y-2">
+                  <div key={q.id} className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
                     <div className="flex items-center justify-between text-[11px] text-slate-400">
                       <span className="font-bold text-sky-400">Question {qIndex + 1}</span>
                       <span>{q.subject} • {q.chapter}</span>
@@ -1525,7 +1402,7 @@ export default function PracticePage() {
                     {qOpts.length > 0 && (
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
                         {qOpts.map((opt, optIdx) => (
-                          <div key={optIdx} className="p-2 rounded bg-slate-900 border border-slate-800/80 text-[11px] flex items-start gap-2">
+                          <div key={optIdx} className="p-2 rounded bg-slate-900 border border-slate-800 text-[11px] flex items-start gap-2">
                             <span className="font-bold text-slate-400">{String.fromCharCode(65 + optIdx)}.</span>
                             <div className="flex-1">
                               <LatexRenderer content={opt} />
@@ -1538,7 +1415,7 @@ export default function PracticePage() {
                 );
               })}
 
-              {/* Answer Key Table */}
+              {/* Answer Key */}
               <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 space-y-2">
                 <h4 className="font-bold text-xs text-amber-400">Answer Key:</h4>
                 <div className="grid grid-cols-5 sm:grid-cols-10 gap-2 text-center text-xs">
@@ -1555,5 +1432,21 @@ export default function PracticePage() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function PracticePage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="space-y-3 pb-8">
+          <div className="h-20 bg-slate-900 border border-slate-800 rounded-xl animate-pulse" />
+          <div className="h-16 bg-slate-900 border border-slate-800 rounded-xl animate-pulse" />
+          <div className="h-64 bg-slate-900 border border-slate-800 rounded-xl animate-pulse" />
+        </div>
+      }
+    >
+      <PracticeContent />
+    </Suspense>
   );
 }
