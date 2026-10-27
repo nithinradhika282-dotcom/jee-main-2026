@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 250" width="100%" height="100%" style="background:#090d16; border-radius:12px; font-family:sans-serif;">
+  <line x1="50" y1="230" x2="400" y2="230" stroke="#475569" stroke-width="4"/>
+  <text x="50" y="245" fill="#64748b" font-size="11">Ground</text>
+  <circle cx="220" cy="50" r="18" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="202" y1="50" x2="202" y2="130" stroke="#f59e0b" stroke-width="2"/>
+  <!-- 6 kg mass -->
+  <rect x="180" y="130" width="44" height="44" fill="#1e293b" stroke="#38bdf8" stroke-width="2" rx="4"/>
+  <text x="188" y="157" fill="#38bdf8" font-size="13" font-weight="bold">6 kg</text>
+  <!-- Height marker -->
+  <line x1="250" y1="174" x2="250" y2="230" stroke="#10b981" stroke-width="2" stroke-dasharray="3 3"/>
+  <text x="260" y="205" fill="#10b981" font-size="12" font-weight="bold">h = 6 m</text>
+</svg>

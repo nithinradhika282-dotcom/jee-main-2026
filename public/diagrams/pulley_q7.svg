@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240" width="100%" height="220" style="background:#0f172a; border-radius:8px;">
+  <!-- Ceiling -->
+  <line x1="60" y1="20" x2="260" y2="20" stroke="#94a3b8" stroke-width="4"/>
+  <line x1="70" y1="10" x2="90" y2="20" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="110" y1="10" x2="130" y2="20" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="150" y1="10" x2="170" y2="20" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="190" y1="10" x2="210" y2="20" stroke="#94a3b8" stroke-width="2"/>
+  <line x1="230" y1="10" x2="250" y2="20" stroke="#94a3b8" stroke-width="2"/>
+  <!-- Pulley Clamp -->
+  <line x1="160" y1="20" x2="160" y2="60" stroke="#cbd5e1" stroke-width="3"/>
+  <!-- Pulley Disc -->
+  <circle cx="160" cy="75" r="25" fill="#334155" stroke="#38bdf8" stroke-width="3"/>
+  <circle cx="160" cy="75" r="4" fill="#f8fafc"/>
+  <!-- Strings -->
+  <line x1="135" y1="75" x2="135" y2="150" stroke="#f8fafc" stroke-width="2.5"/>
+  <line x1="185" y1="75" x2="185" y2="120" stroke="#f8fafc" stroke-width="2.5"/>
+  <!-- Mass m1 (3 kg) -->
+  <rect x="115" y="150" width="40" height="40" fill="#3b82f6" rx="4" stroke="#60a5fa" stroke-width="2"/>
+  <text x="135" y="175" fill="#ffffff" font-size="13" font-family="sans-serif" text-anchor="middle" font-weight="bold">3 kg</text>
+  <!-- Mass m2 (2 kg) -->
+  <rect x="165" y="120" width="40" height="40" fill="#10b981" rx="4" stroke="#34d399" stroke-width="2"/>
+  <text x="185" y="145" fill="#ffffff" font-size="13" font-family="sans-serif" text-anchor="middle" font-weight="bold">2 kg</text>
+  <!-- Acceleration arrows -->
+  <path d="M 105 160 L 105 185 M 101 178 L 105 186 L 109 178" stroke="#f43f5e" stroke-width="2" fill="none"/>
+  <text x="95" y="175" fill="#f43f5e" font-size="12" font-family="sans-serif">a</text>
+</svg>

@@ -1,0 +1,102 @@
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Paper {
+  id          String     @id @default(uuid())
+  year        Int        @default(2026)
+  session     Int // 1 or 2
+  exam_date   String // YYYY-MM-DD
+  shift       Int // 1 or 2
+  source_url  String
+  total_marks Int        @default(300)
+  questions   Question[]
+
+  @@map("papers")
+}
+
+model Question {
+  id                  String        @id @default(uuid())
+  paper_id            String
+  paper               Paper         @relation(fields: [paper_id], references: [id], onDelete: Cascade)
+  subject             String // Physics | Chemistry | Mathematics
+  chapter             String
+  topic               String?
+  question_number     Int
+  question_type       String // MCQ | NUMERICAL
+  question_text_latex String
+  image_url           String?
+  options_json        String? // JSON string: ["Option A", "Option B", ...] for MCQs
+  correct_answer      String // e.g. "A", "B", "C", "D" or numerical value string e.g. "42"
+  marks_correct       Int           @default(4)
+  marks_negative      Int           @default(1)
+  difficulty          String        @default("medium") // easy | medium | hard
+  source_page         Int?
+  explanation         Explanation?
+  attempts            Attempt[]
+
+  @@index([subject])
+  @@index([chapter])
+  @@index([difficulty])
+  @@map("questions")
+}
+
+model Explanation {
+  id                   String   @id @default(uuid())
+  question_id          String   @unique
+  question             Question @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  hint                 String
+  approach             String
+  full_solution_latex  String
+  concept_used         String
+  common_mistake       String?
+  similar_concept_tip  String?
+  verified_against_key Boolean  @default(true)
+  confidence           String   @default("high") // low | medium | high
+
+  @@map("explanations")
+}
+
+model Chapter {
+  id                  String  @id @default(uuid())
+  subject             String // Physics | Chemistry | Mathematics
+  name                String
+  class_level         Int // 11 | 12
+  jee_weightage_notes String?
+
+  @@index([subject])
+  @@map("chapters")
+}
+
+model PatternInfo {
+  id               String  @id @default(uuid())
+  year             Int     @default(2026)
+  section          String // Section A (MCQs) | Section B (Numericals)
+  question_type    String // MCQ | NUMERICAL
+  count            Int
+  marks_correct    Int     @default(4)
+  marks_negative   Int     @default(1)
+  duration_minutes Int     @default(180)
+  notes            String?
+
+  @@map("pattern_info")
+}
+
+model Attempt {
+  id              String   @id @default(uuid())
+  question_id     String
+  question        Question @relation(fields: [question_id], references: [id], onDelete: Cascade)
+  selected_answer String?
+  is_correct      Boolean?
+  time_taken_sec  Int      @default(0)
+  created_at      DateTime @default(now())
+  bookmarked      Boolean  @default(false)
+
+  @@index([question_id])
+  @@map("attempts")
+}

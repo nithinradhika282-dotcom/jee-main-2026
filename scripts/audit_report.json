@@ -1,0 +1,2308 @@
+{
+  "total_checked": 322,
+  "number_fixed": 20,
+  "number_needing_review": 204,
+  "number_missing_figures": 15,
+  "fixed_questions": [
+    {
+      "id": "q_2026_54df0d9b0f",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2026,
+      "text": "The percentage error in the calculated volume of a sphere, if there is",
+      "options": [
+        "1",
+        "2",
+        "6",
+        "8"
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "6",
+      "source": "JEE Main Units & Measurements Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2025_42ccb80c5f",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2025,
+      "text": "A quantity Q is formulated as . X, Y, and Z are independent parameters",
+      "options": [
+        "0.6",
+        "0.8",
+        "0.7",
+        "0.1"
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "0.7",
+      "source": "JEE Main Units & Measurements Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2025_5c31c79984",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2025,
+      "text": "The dimension of is equal to that of: ( = Vacuum permeability and = Va",
+      "options": [
+        "Voltage",
+        "Inductance",
+        "Resistance",
+        "Capacitance"
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "Resistance",
+      "source": "JEE Main Units & Measurements Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2023_e3630c1c73",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2023,
+      "text": "In the equation is pressure, is volume, is universal gas constant and ",
+      "options": [
+        "Impulse",
+        "Energy",
+        "Pressure gradient",
+        "Coefficient of viscosity"
+      ],
+      "correct_letter": "B",
+      "correct_option_text": "Energy",
+      "source": "JEE Main Units & Measurements Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2026_8e247ca476",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2026,
+      "text": "A gas balloon is going up with a constant velocity of . When this ball",
+      "options": [
+        "85",
+        "150",
+        "129",
+        "125"
+      ],
+      "correct_letter": "D",
+      "correct_option_text": "125",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2026_3a71dc1ab3",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2026,
+      "text": "The velocity versus time plot of a particle is shown in the figure, fo",
+      "options": [
+        "25 m and zero",
+        "50 m and zero",
+        "100 m and zero",
+        "100 m and"
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "100 m and zero",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2025_9eb0984a26",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2025,
+      "text": "A particle moves along the -axis and has its displacement varying with",
+      "options": [
+        "the acceleration of the particle is",
+        "the acceleration of the particle is",
+        "the acceleration of the particle is 2 c",
+        "the initial velocity of the particle is"
+      ],
+      "correct_letter": "A",
+      "correct_option_text": "the acceleration of the particle is",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2025_86965ab3b3",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2025,
+      "text": "The velocity-time graph of an object moving along a straight line is s",
+      "options": [
+        "11 m",
+        "30 m",
+        "13 m",
+        "10 m"
+      ],
+      "correct_letter": "B",
+      "correct_option_text": "30 m",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2024_415ad4338b",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2024,
+      "text": "Two cars are travelling towards each other at speed of each. When the ",
+      "options": [
+        "25 m",
+        "100 m",
+        "50 m",
+        "200 m"
+      ],
+      "correct_letter": "B",
+      "correct_option_text": "100 m",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2024_322ea3b869",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2024,
+      "text": "A particle moving in a straight line covers half the distance with spe",
+      "options": [
+        "9.2 m/s",
+        "8.8 m/s",
+        "10 m/s",
+        "8 m/s"
+      ],
+      "correct_letter": "D",
+      "correct_option_text": "8 m/s",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2023_8e704caaaa",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2023,
+      "text": "A passenger sitting in a train A moving at observes another train movi",
+      "options": [
+        "80 m",
+        "200 m",
+        "120 m",
+        "320 m"
+      ],
+      "correct_letter": "D",
+      "correct_option_text": "320 m",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2023_9feaf3b615",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2023,
+      "text": "Given below are two statements: one is labelled as Assertion and the o",
+      "options": [
+        "and the other is labelled as Reason (R). Assertion (A) : In Vernier calliper if positive zero error exists, then while taking measurements, the reading taken will be more than the actual reading. Reason (R) : The zero error in Vernier Calliper might have happened due to manufacturing defect or due to rough handling. In the light of the above statements, choose the correct answer from the options given below : (A)Both (A) and (R) are correct and (R) is the correct explanation of (A)",
+        "Both (A) and (R) are correct but (R) is not the correct explanation of (A)",
+        "(A) is true but (R) is false",
+        "(A) is false but (R) is true"
+      ],
+      "correct_letter": "B",
+      "correct_option_text": "Both (A) and (R) are correct but (R) is not the correct explanation of (A)",
+      "source": "JEE Main Units & Measurements Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2023_4b2263b22c",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2023,
+      "text": "Given below are two statements: Statement I : For a planet, if the rat",
+      "options": [
+        "Both Statement I and Statement II are False.",
+        "Both Statement I and Statement II are true.",
+        "Statement I is incorrect but Statement II is true.",
+        "Statement I is correct but Statement II is false."
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "Statement I is incorrect but Statement II is true.",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2023_2162b060cd",
+      "qnum": 2,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2023,
+      "text": "Given below are two statements: one is labelled as Assertion and the o",
+      "options": [
+        "and the other is labelled as Reason (R). Assertion (A) : In Vernier calliper if positive zero error exists, then while taking measurements, the reading taken will be more than the actual reading. Reason (R) : The zero error in Vernier Calliper might have happened due to manufacturing defect or due to rough handling. In the light of the above statements, choose the correct answer from the options given below : (A)Both (A) and (R) are correct and (R) is the correct explanation of (A)",
+        "Both (A) and (R) are correct but (R) is not the correct explanation of (A)",
+        "(A) is true but (R) is false",
+        "(A) is false but (R) is true"
+      ],
+      "correct_letter": "B",
+      "correct_option_text": "Both (A) and (R) are correct but (R) is not the correct explanation of (A)",
+      "source": "JEE Main Units & Measurements Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2026_7b89be64d7",
+      "qnum": 9,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2026,
+      "text": "Given below are two statements : Statement I : is the correct trend in",
+      "options": [
+        "Both Statement I and Statement II are False.",
+        "Both Statement I and Statement II are true.",
+        "Statement I is incorrect but Statement II is true.",
+        "Statement I is correct but Statement II is false."
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "Statement I is incorrect but Statement II is true.",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2025_117a336cf5",
+      "qnum": 7,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2025,
+      "text": "Given below are two statements : Statement (I) : is more polar than St",
+      "options": [
+        "Both Statement I and Statement II are False.",
+        "Both Statement I and Statement II are true.",
+        "Statement I is incorrect but Statement II is true.",
+        "Statement I is correct but Statement II is false."
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "Statement I is incorrect but Statement II is true.",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2025_00a2a5153e",
+      "qnum": 6,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2025,
+      "text": "Given below are two statements: Statement (I): For , all three possibl",
+      "options": [
+        "Both Statement I and Statement II are False.",
+        "Both Statement I and Statement II are true.",
+        "Statement I is incorrect but Statement II is true.",
+        "Statement I is correct but Statement II is false."
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "Statement I is incorrect but Statement II is true.",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2023_02082a1037",
+      "qnum": 8,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2023,
+      "text": "Given below are two statements : Statement I : and both possess V-shap",
+      "options": [
+        "Both Statement I and Statement II are False.",
+        "Both Statement I and Statement II are true.",
+        "Statement I is incorrect but Statement II is true.",
+        "Statement I is correct but Statement II is false."
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "Statement I is incorrect but Statement II is true.",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2026_2947098bf3",
+      "qnum": 4,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2026,
+      "text": "Given below are two statements : Statement I : On the basis of inducti",
+      "options": [
+        "Both Statement I and Statement II are False.",
+        "Both Statement I and Statement II are true.",
+        "Statement I is incorrect but Statement II is true.",
+        "Statement I is correct but Statement II is false."
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "Statement I is incorrect but Statement II is true.",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    },
+    {
+      "id": "q_2023_764dbb2805",
+      "qnum": 10,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2023,
+      "text": "Given below are two statements : Statement I : Tropolone is an aromati",
+      "options": [
+        "Both Statement I and Statement II are False.",
+        "Both Statement I and Statement II are true.",
+        "Statement I is incorrect but Statement II is true.",
+        "Statement I is correct but Statement II is false."
+      ],
+      "correct_letter": "C",
+      "correct_option_text": "Statement I is incorrect but Statement II is true.",
+      "source": "JEE Main Motion in a Straight Line Previous Year Questions with Answer Key.pdf"
+    }
+  ],
+  "needing_review": [
+    {
+      "id": "q_2026_ec1269a267",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2026,
+      "text": "A new unit ( ) of length is chosen such that it is equal to the speed of light i",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_df75886c1a",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2026,
+      "text": "Consider the equation Where magnetic field intensity; electric field, permittivi",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_6df4362c34",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2024,
+      "text": "The de-Broglie wavelength associated with a particle of mass and energy is . The",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_bd03c0d8f4",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2024,
+      "text": "The dimensional formula of latent heat is :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_a1b10fd067",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2024,
+      "text": "One main scale division of a vernier caliper is equal to units. If th division o",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_9b53d0e664",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2023,
+      "text": "The speed of a wave produced in water is given by . Where and are wavelength of ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_193670fa01",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Units and Measurements",
+      "year": 2023,
+      "text": "A body of mass is moving with a velocity of . Its kinetic energy will be",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_ca3707bce4",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2025,
+      "text": "Which of the following curves possibly represent one-dimensional motion of a par",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_4bff5f4deb",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2024,
+      "text": "A body projected vertically upwards with a certain speed from the top of a tower",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_0c7f6e25e7",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2023,
+      "text": "The position of a particle related to time is given by . The magnitude of veloci",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_5389920a2a",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2023,
+      "text": "The distance travelled by an object in time is given by . The instantaneous spee",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_1ad0384263",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2026,
+      "text": "In the given figure the blocks and weigh and 8 kg respectively. The co-efficient",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_976ad746b0",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2025,
+      "text": "A body of mass 2 kg moving with velocity of ms enters into a constant force fiel",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_df96b28940",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2025,
+      "text": "An object with mass 500 g moves along x-axis with speed m/s. The force acting on",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_ef80da67f4",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2024,
+      "text": "Three blocks having masses and respectively are hanging from a smooth pulley usi",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_d7855bb538",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2024,
+      "text": "A mass is suspended from the ceiling by a rope of length . A horizontal force ' ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_84d491fb25",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2024,
+      "text": "A light unstretchable string passing over a smooth light pulley connects two blo",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_053979775d",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2023,
+      "text": "The position vector of a particle related to time is given by The direction of n",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_d3c80355c8",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2023,
+      "text": "Three forces are acting on a particle of mass . The forces and are applied perpe",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_0835b5a6ce",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2023,
+      "text": "A body of mass moves along -axis such that its velocity varies with displacement",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_30bc0a1aeb",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2026,
+      "text": "A body of mass 1 kg moves along a straight line with a velocity . The work done ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_8cdb32782d",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2026,
+      "text": "The velocity at which 6 kg mass (shown in figure) strikes the ground when it is ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_ac951d13e0",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2026,
+      "text": "The rain drop of mass 1 g , starts with zero velocity from a height of 1 km . It",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_61accda29e",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2025,
+      "text": "Which one of the following forces cannot be expressed in terms of potential ener",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_f6b7adfadd",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2025,
+      "text": "An object of mass 1000 g experiences a time dependent force . The power generate",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_3c8d25176a",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2025,
+      "text": "A block of mass 25 kg is pulled along a horizontal surface by a force at an angl",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_e5fe2dd51b",
+      "qnum": 5,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2024,
+      "text": "A particle of mass moves on a straight line with its velocity increasing with di",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_7ace5f7544",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2024,
+      "text": "A block is simply released from the top of an inclined plane as shown in the fig",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_9f7bdb886b",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2024,
+      "text": "Three bodies A, B and C have equal kinetic energies and their masses are and res",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_c3f0a66fc1",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2023,
+      "text": "Two bodies are having kinetic energies in the ratio 16 : 9. If they have same li",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_43720800c8",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2023,
+      "text": "A bullet of mass moving horizontally with speed hits a wooden block of mass kept",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_8b08b30a75",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2026,
+      "text": "A solid cylinder having radius and length is slipping on a rough horizontal plan",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_7c53bddf3e",
+      "qnum": 5,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2026,
+      "text": "A solid sphere of mass and a spherical shell of mass , both having same radius, ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_df88f53f64",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2026,
+      "text": "A solid sphere of radius 4 cm and mass 5 kg is rotating (rotation axis is passin",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_0869e382cf",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2025,
+      "text": "A rod of linear mass density '\\lambda' and length 'L' is bent to form a ring of ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_2256868859",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2025,
+      "text": "A wheel is rolling on a plane surface. The speed of a particle on the highest po",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_484a59983a",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2025,
+      "text": "If and represent the angular momentum and linear momentum respectively of a part",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_426268adbd",
+      "qnum": 6,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2024,
+      "text": "A heavy iron bar, of weight is having its one end on the ground and the other on",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_4fa220aa81",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2024,
+      "text": "A thin circular disc of mass and radius is rotating in a horizontal plane about ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_0d56b18e06",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2023,
+      "text": "A disc is rolling without slipping on a surface. The radius of the disc is . At ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_1528905524",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2023,
+      "text": "An object of mass 8 kg is hanging from one end of a uniform rod CD of mass 2 kg ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_c93aacfc78",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2026,
+      "text": "A body of mass is taken from the surface of earth to a height equal to twice the",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_7023ccdf06",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2026,
+      "text": "The height in terms of radius of the earth , at which the acceleration due to gr",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_916d7f8ec9",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2025,
+      "text": "An object is kept at rest at a distance of above the earth's surface where is ea",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_747f230734",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2025,
+      "text": "Earth has mass 8 times and radius 2 times that of a planet. If the escape veloci",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_5629e5c564",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2025,
+      "text": "A satellite is launched into a circular orbit of radius ' R ' around the earth. ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_0be533fa81",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2024,
+      "text": "A satellite of mass is revolving in circular orbit of radius . If energy is supp",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_9d9c1f5c26",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2024,
+      "text": "Two satellite A and B go round a planet in circular orbits having radii 4R and R",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_a90d1446e8",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2023,
+      "text": "Two identical particles each of mass ' ' go round a circle of radius under the a",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_c886c41f1a",
+      "qnum": 5,
+      "subject": "Physics",
+      "chapter": "Gravitation",
+      "year": 2023,
+      "text": "A body is released from a height equal to the radius of the earth. The velocity ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_37eab7b51a",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Current Electricity",
+      "year": 2026,
+      "text": "When an external resistance of is connected across terminals of a cell, a curren",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_16515bf910",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Current Electricity",
+      "year": 2025,
+      "text": "In the figure shown below, a resistance of is connected in series to an ammeter ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_0710a32ea8",
+      "qnum": 6,
+      "subject": "Physics",
+      "chapter": "Current Electricity",
+      "year": 2024,
+      "text": "At room temperature , the resistance of a heating element is . The temperature c",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_061af5595c",
+      "qnum": 6,
+      "subject": "Physics",
+      "chapter": "Current Electricity",
+      "year": 2023,
+      "text": "A network of four resistances is connected to battery, as shown in figure. The m",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_af5541d3a3",
+      "qnum": 5,
+      "subject": "Physics",
+      "chapter": "Current Electricity",
+      "year": 2023,
+      "text": "When a resistance of is shunted with a moving coil galvanometer, it shows a full",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_8b58bfa17d",
+      "qnum": 5,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2026,
+      "text": "Two point charges and are placed at points and respectively. Force on charge is ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_179f9ea60b",
+      "qnum": 7,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2026,
+      "text": "The electric potential as a function of is given by . The electric field at a po",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_6a0c4db6ff",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2025,
+      "text": "Two metal spheres of radius R and 3R have same surface charge density \\sigma . I",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_0859b72f5c",
+      "qnum": 5,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2025,
+      "text": "An infinitely long wire has uniform linear charge density nC/m . The net flux th",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_93f9c5293f",
+      "qnum": 7,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2024,
+      "text": "Five charges and are situated as shown in the figure. The electric flux due to t",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_e9a191bbda",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2024,
+      "text": "Two charged conducting spheres of radii and are connected to each other by a con",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_e0b1a3e196",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2024,
+      "text": "Two identical conducting spheres P and S with charge Q on each, repel each other",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_6816576dbf",
+      "qnum": 7,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2023,
+      "text": "The electric field due to a short electric dipole at a large distance from cente",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_2936454a2a",
+      "qnum": 5,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2023,
+      "text": "A charge is divided into two parts and placed at distance so that the repulsive ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_0035ff7f60",
+      "qnum": 7,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2023,
+      "text": "Two charges each of magnitude and separated by a distance of constitute an elect",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_4ab91641e6",
+      "qnum": 6,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2026,
+      "text": "One mole of diatomic gas having rotational modes only is kept in a cylinder with",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_ba351e5996",
+      "qnum": 7,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2026,
+      "text": "Initial pressure and volume of a monoatomic ideal gas are and . The change in in",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_40b93e81fd",
+      "qnum": 8,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2026,
+      "text": "A cylinder with adiabatic walls is closed at both ends and is divided into two c",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_024cde405c",
+      "qnum": 6,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2025,
+      "text": "A monoatomic gas having is stored in a thermally insulated container and the gas",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_02bc593998",
+      "qnum": 7,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2025,
+      "text": "Water falls from a height of 200 m into a pool. Calculate the rise in temperatur",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_ab2cd1dfa0",
+      "qnum": 5,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2025,
+      "text": "The helium and argon are put in the flask at the same room temperature (300 K). ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_355ac4a0aa",
+      "qnum": 8,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2024,
+      "text": "A real gas within a closed chamber at undergoes the cyclic process as shown in f",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_73834cc01b",
+      "qnum": 9,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2024,
+      "text": "The temperature of a gas is and the average translational kinetic energy of its ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_3afac4b610",
+      "qnum": 9,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2024,
+      "text": "The volume of an ideal gas is changed adiabatically from 5 litres to 4 litres. T",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_e515136a14",
+      "qnum": 8,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2023,
+      "text": "A thermodynamic system is taken through cyclic process. The total work done in t",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_b05efc34b3",
+      "qnum": 9,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2023,
+      "text": "A flask contains Hydrogen and Argon in the ratio by mass. The temperature of the",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_f22542b37a",
+      "qnum": 6,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2023,
+      "text": "The initial pressure and volume of an ideal gas are P and V . The final pressure",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_825ffdbab0",
+      "qnum": 6,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2026,
+      "text": "An oxide of iron contains iron, its empirical formula, is : (Given : Molar mass ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_373fe92846",
+      "qnum": 4,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2026,
+      "text": "What volume of hydrogen gas at STP would be liberated by action of 50 mL of of p",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_c46a64741b",
+      "qnum": 2,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2026,
+      "text": "How many grams of residue is obtained by heating 2.76 g of silver carbonate? (Gi",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_a9bfdb4657",
+      "qnum": 8,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2025,
+      "text": "On combustion 0.210 g of an organic compound containing C, H and O gave 0.127 g ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_fe86a83fc5",
+      "qnum": 3,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2025,
+      "text": "Mass of magnesium required to produce 220 mL of hydrogen gas at STP on reaction ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_ffc7e89d87",
+      "qnum": 4,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2025,
+      "text": "10 mL of 2 M NaOH solution is added to 20 mL of 1 M HCl solution kept in a beake",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_21887e8a4c",
+      "qnum": 10,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2024,
+      "text": "The candela is the luminous intensity, in a given direction, of a source that em",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_128f9a8c62",
+      "qnum": 3,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2024,
+      "text": "Combustion of glucose produces and water. The amount of oxygen (in ) required fo",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_a4842f55fa",
+      "qnum": 3,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2024,
+      "text": "Molality of aqueous solution of is : (Given : Density of solution , Molar mass i",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_4c0a5d68cd",
+      "qnum": 2,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2023,
+      "text": "A metal chloride contains of chlorine by weight . vapours of the metal chloride ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_21d57e052f",
+      "qnum": 2,
+      "subject": "Chemistry",
+      "chapter": "Some Basic Concepts in Chemistry",
+      "year": 2023,
+      "text": "A solution is prepared by adding of \" \" to 1 mole of water. Mass percent of \" \" ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_3bc3653a9b",
+      "qnum": 8,
+      "subject": "Chemistry",
+      "chapter": "Structure of Atom",
+      "year": 2026,
+      "text": "Consider two radiations of wavelengths The ratio of the energies of these two ra",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_34d880dd84",
+      "qnum": 5,
+      "subject": "Chemistry",
+      "chapter": "Structure of Atom",
+      "year": 2025,
+      "text": "Consider the ground state of chromium atom . How many electrons are with Azimuth",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_a66c7ff01b",
+      "qnum": 2,
+      "subject": "Chemistry",
+      "chapter": "Structure of Atom",
+      "year": 2025,
+      "text": "Which one of the following about an electron occupying the 1 s orbital in a hydr",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_d88d83de9d",
+      "qnum": 4,
+      "subject": "Chemistry",
+      "chapter": "Structure of Atom",
+      "year": 2024,
+      "text": "A hypothetical electromagnetic wave is shown below. The frequency of the wave is",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_b6aa932ca0",
+      "qnum": 10,
+      "subject": "Chemistry",
+      "chapter": "Structure of Atom",
+      "year": 2023,
+      "text": "The total number of isoelectronic species from the given set is ___________.",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_1b773a4433",
+      "qnum": 9,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2026,
+      "text": "Bromine trifluoride autoionizes to form and . The shapes of the cation and anion",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_1ca976ea78",
+      "qnum": 7,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2026,
+      "text": "The pairs among and that do not have similar Lewis dot structure are",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_c5c8eb229b",
+      "qnum": 6,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2025,
+      "text": "In SO 2 , NO 2 and N 3 , the hybridizations at the central atom are respectively",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_434537bbd5",
+      "qnum": 12,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2024,
+      "text": "The correct increasing order for bond angles among and is :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_7fbbd93cad",
+      "qnum": 10,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2024,
+      "text": "In which one of the following pairs the central atoms exhibit hybridization ?",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_3f9fc2430e",
+      "qnum": 5,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2024,
+      "text": "The shape of carbocation is :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_a8c1d0dc48",
+      "qnum": 8,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2023,
+      "text": "In which of the following processes, the bond order increases and paramagnetic c",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_3d3c88fcd5",
+      "qnum": 9,
+      "subject": "Chemistry",
+      "chapter": "Chemical Bonding and Molecular Structure",
+      "year": 2023,
+      "text": "at room temperature is a:",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_683c25bfd8",
+      "qnum": 10,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2026,
+      "text": "Given below are two statements : Given : Molar mass of are and , respectively St",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_ac21b1c4a3",
+      "qnum": 8,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2026,
+      "text": "When 0.25 moles of a non-volatile, non-ionizable solute was dissolved in 1 mole ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_d0d4b87ff3",
+      "qnum": 3,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2026,
+      "text": "At aqueous solution and aqueous solution are placed in a container separated by ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_b9dd2dc1f1",
+      "qnum": 10,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2025,
+      "text": "The freezing point depression of a 0.1 m aqueous solution of a monobasic weak ac",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_5e87220bae",
+      "qnum": 11,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2025,
+      "text": "Which of the following binary mixture does not show the behaviour of minimum boi",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_36ac9b0bab",
+      "qnum": 8,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2025,
+      "text": "Liquid A and B form an ideal solution. The vapour pressures of pure liquids A an",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_5ac995bf8b",
+      "qnum": 11,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2024,
+      "text": "when treated with gives green colour solution of . The two solutions are separat",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_895aae83c2",
+      "qnum": 1,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2024,
+      "text": "Identify the mixture that shows positive deviations from Raoult's Law",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_8a2289e33c",
+      "qnum": 3,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2023,
+      "text": "What weight of glucose must be dissolved in of water to lower the vapour pressur",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_bca38458b4",
+      "qnum": 11,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2023,
+      "text": "The vapour pressure of aqueous solution of glucose is __________ at . [Given : T",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_3394c20b86",
+      "qnum": 9,
+      "subject": "Chemistry",
+      "chapter": "Solutions",
+      "year": 2023,
+      "text": "Sea water contains and by weight of solution. The normal boiling point of the se",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_b2167778ee",
+      "qnum": 11,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2026,
+      "text": "Given at 298 K : Volt Volt The in Volt at 298 K is given by :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_110bc88ee5",
+      "qnum": 10,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2026,
+      "text": "For a general redox reaction Anode Cathode Which of the following statement is i",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_7af96dad48",
+      "qnum": 9,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2026,
+      "text": "Consider the following data. Electrolyte is sparingly soluble in water. If the c",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_fa8c790c95",
+      "qnum": 3,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2025,
+      "text": "On charging the lead storage battery, the oxidation state of lead changes from t",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_e5541da674",
+      "qnum": 5,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2025,
+      "text": "The standard cell potential cell of a fuel cell based on the oxidation of methan",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_d658527ef8",
+      "qnum": 6,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2025,
+      "text": "40 mL of a mixture of and HCl (aqueous solution) is titrated against 0.1 M NaOH ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_b277f026aa",
+      "qnum": 13,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2024,
+      "text": "Which out of the following is a correct equation to show change in molar conduct",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_0782040c16",
+      "qnum": 12,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2024,
+      "text": "The molar conductivity for electrolytes and are plotted against as shown below. ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_133c2bf99e",
+      "qnum": 6,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2024,
+      "text": "The emf of cell is at . It could be increased by :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_b341d918e0",
+      "qnum": 1,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2023,
+      "text": "The reaction occurs in which of the given galvanic cell.",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_ee5af53856",
+      "qnum": 1,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2023,
+      "text": "The standard electrode potential of in aqueous solution does not depend on",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_bb2ff1058e",
+      "qnum": 1,
+      "subject": "Chemistry",
+      "chapter": "Electrochemistry",
+      "year": 2023,
+      "text": "Which one of the following statements is correct for electrolysis of brine solut",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_9d68d289a6",
+      "qnum": 3,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2026,
+      "text": "First order gas phase reaction initial pressure of gas total pressure of the rea",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_8a431692ca",
+      "qnum": 4,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2026,
+      "text": "Consider the given graph showing variation of reactant concentration with time. ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_a6af5572c5",
+      "qnum": 1,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2026,
+      "text": "Consider the first order reaction . The fraction of molecules decomposed in the ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_a91d3c9e0b",
+      "qnum": 12,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2025,
+      "text": "In a first order decomposition reaction, the time taken for the decomposition of",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_8d0823ef3f",
+      "qnum": 9,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2025,
+      "text": "A(g) \\to B(g) + C(g) is a first order reaction. Time t \\infty P system P t P \\in",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_b661365cef",
+      "qnum": 3,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2025,
+      "text": "A person's wound was exposed to some bacteria and then bacterial growth started ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_37da6f84ea",
+      "qnum": 7,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2024,
+      "text": "For a reaction If the rate of formation of B is set to be zero then the concentr",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_82af70a340",
+      "qnum": 2,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2024,
+      "text": "Integrated rate law equation for a first order gas phase reaction is given by (w",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_da4cc9de9a",
+      "qnum": 14,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2024,
+      "text": "Consider the following first order gas phase reaction at constant temperature If",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_ee536ab2fc",
+      "qnum": 2,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2023,
+      "text": "The correct reaction profile diagram for a positive catalyst reaction.",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_d53415073f",
+      "qnum": 1,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2023,
+      "text": "Consider the following reaction that goes from A to B in three steps as shown be",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_26bb530ba9",
+      "qnum": 1,
+      "subject": "Chemistry",
+      "chapter": "Chemical Kinetics",
+      "year": 2023,
+      "text": "A student has studied the decomposition of a gas AB at 25 C. He obtained the fol",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_e9b5380eda",
+      "qnum": 12,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2026,
+      "text": "Number of paramagnetic complexes among the following is .",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_83d4bf3390",
+      "qnum": 11,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2026,
+      "text": "An excess of is added to 100 mL of a 0.05 M solution of tetraaquadichloridochrom",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_13097c0ad5",
+      "qnum": 5,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2026,
+      "text": "The total number of unpaired electrons present in the (low spin) (high spin), (h",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_0d6e6ae421",
+      "qnum": 10,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2025,
+      "text": "The number of paramagnetic metal complex species among , and with same number of",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_ee9a709139",
+      "qnum": 4,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2025,
+      "text": "The number of paramagnetic complexes among , , and , which involve hybridization",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_8d21b0c4f7",
+      "qnum": 7,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2025,
+      "text": "A metal complex with a formula is involved in hybridisation. It upon reaction wi",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_caf85e6bff",
+      "qnum": 13,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2024,
+      "text": "Number of ambidentate ligands among the following is _________. .",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_31163f91e7",
+      "qnum": 8,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2024,
+      "text": "Total number of unpaired electrons in the complex ions and is ________.",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_567b0ceaca",
+      "qnum": 12,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2023,
+      "text": "The homoleptic and octahedral complex of and has ___________ unpaired electron(s",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_77b1c3ef96",
+      "qnum": 1,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2023,
+      "text": "The ratio of spin-only magnetic moment values eff eff is _________.",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_ed637729f5",
+      "qnum": 4,
+      "subject": "Chemistry",
+      "chapter": "Coordination Compounds",
+      "year": 2023,
+      "text": "For a metal ion, the calculated magnetic moment is . This metal ion has ________",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_edd3a749a8",
+      "qnum": 13,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2026,
+      "text": "The total number of aromatic compounds/species from the following is",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_383131bf93",
+      "qnum": 12,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2026,
+      "text": "Shown below is the structure of methyl acetate with three different and carbon -",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_927f50b334",
+      "qnum": 13,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2025,
+      "text": "What is the correct IUPAC name of the compound?",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_076fabc828",
+      "qnum": 11,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2025,
+      "text": "The number of optically active products obtained from the complete ozonolysis of",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_7a3b5f9581",
+      "qnum": 5,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2025,
+      "text": "Which of the following is the correct IUPAC name of given organic compound (X)?",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_bf8269d11e",
+      "qnum": 16,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2024,
+      "text": "The correct stability order of the following resonance structures of is",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_327b1065e0",
+      "qnum": 17,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2024,
+      "text": "Total number of stereo isomers possible for the given structure :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_ec10ec5dfa",
+      "qnum": 14,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2024,
+      "text": "Relative stability of the contributing structures is :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_8ecc675365",
+      "qnum": 13,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2023,
+      "text": "Which of the following statement is correct for paper chromatography?",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_7328791849",
+      "qnum": 10,
+      "subject": "Chemistry",
+      "chapter": "Organic Chemistry - Basic Principles and Techniques",
+      "year": 2023,
+      "text": "Among the following compounds, the one which shows highest dipole moment is",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_3ee42f3858",
+      "qnum": 15,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2026,
+      "text": "Let and . If , then equals :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_047a1f9c7b",
+      "qnum": 13,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2026,
+      "text": "The sum of all possible values of , for which the system of equations : has a no",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_662403f7e9",
+      "qnum": 14,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2025,
+      "text": "Let be a solution of , and for some a and b in , . If , then m + n is equal to _",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_5e9c3cac48",
+      "qnum": 15,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2025,
+      "text": "Let . If adj adj , , then is equal to",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_a6ab5ccceb",
+      "qnum": 6,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2025,
+      "text": "Let be a matrix such that . If , then is equal to :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_90c5243866",
+      "qnum": 18,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2024,
+      "text": "Let and be a matrix such that . If and , then is equal to",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_7fb12c49f8",
+      "qnum": 15,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2024,
+      "text": "Let . If the system of equations has infinitely many solutions, then is equal to",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_f4a994ef9d",
+      "qnum": 9,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2024,
+      "text": "If and , then is equal to :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_6087f58495",
+      "qnum": 14,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2023,
+      "text": "Let the determinant of a square matrix A of order be , where and satisfy and . I",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_9a973a2353",
+      "qnum": 11,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2023,
+      "text": "Let for . If , then is equal to",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_6f9ba0c594",
+      "qnum": 12,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2023,
+      "text": "If the system of equations has infinitely many solutions, then is equal to",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_afa2603b05",
+      "qnum": 14,
+      "subject": "Mathematics",
+      "chapter": "Integrals",
+      "year": 2026,
+      "text": "Let be a singular matrix. Let . If M and m are respectively the maximum and the ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_eee06b36d3",
+      "qnum": 16,
+      "subject": "Mathematics",
+      "chapter": "Integrals",
+      "year": 2025,
+      "text": "The integral is equal to:",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_5f10879b72",
+      "qnum": 7,
+      "subject": "Mathematics",
+      "chapter": "Integrals",
+      "year": 2025,
+      "text": "The integral is equal to",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_bd9dc5b519",
+      "qnum": 15,
+      "subject": "Mathematics",
+      "chapter": "Integrals",
+      "year": 2023,
+      "text": "If , then is equal to :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_050de429b7",
+      "qnum": 11,
+      "subject": "Mathematics",
+      "chapter": "Integrals",
+      "year": 2023,
+      "text": "Among (S1): (S2) :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_746132b970",
+      "qnum": 18,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2026,
+      "text": "Let and a vector be such that . If , then is equal to :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_985f9d553a",
+      "qnum": 15,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2026,
+      "text": "Let and . Then the square of the area of the triangle with adjacent sides determ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_40c4e2936d",
+      "qnum": 6,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2026,
+      "text": "Let be the origin, and . If is the point on such that , and is the point such th",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_fefe0cd772",
+      "qnum": 18,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2025,
+      "text": "Let and . Let be a unit vector in the plane of the vectors and and be perpendicu",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_748657abad",
+      "qnum": 12,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2025,
+      "text": "Let and be the vectors of the same magnitude such that Then is :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_5a45da3f9c",
+      "qnum": 20,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2024,
+      "text": "Between the following two statements: Statement I : Let and . Then the vector sa",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_5676d57bb4",
+      "qnum": 21,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2024,
+      "text": "Let , where and are integers and . Let the values of the ordered pair , for whic",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_98c1028f2b",
+      "qnum": 16,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2024,
+      "text": "Let three vectors form a triangle such that and the area of the triangle is . If",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_e48fcc40d3",
+      "qnum": 16,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2023,
+      "text": "Let be the set of all for which the vectors and , where , are coplanar, then is ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_3af9f4b8e9",
+      "qnum": 17,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2023,
+      "text": "Let be a quadrilateral. If and are the mid points of the diagonals and respectiv",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_69191e7b36",
+      "qnum": 14,
+      "subject": "Mathematics",
+      "chapter": "Vector Algebra",
+      "year": 2023,
+      "text": "Let and the angle between the vectors and be . Then is equal to :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_4e0715a205",
+      "qnum": 19,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2026,
+      "text": "A candidate has to go to the examination centre to appear in an examination. The",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_7fcd8da3ba",
+      "qnum": 16,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2026,
+      "text": "A bag contains 6 blue and 6 green balls. Pairs of balls are drawn without replac",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_dad27d28ee",
+      "qnum": 10,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2026,
+      "text": "A bag contains coins -N fair coins, and one coin with 'Head' on both sides. A co",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_e8c2cd9c44",
+      "qnum": 19,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2025,
+      "text": "If A and B are two events such that , and , where denotes the complement of B , ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_00b88e633e",
+      "qnum": 13,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2025,
+      "text": "A bag contains 19 unbiased coins and one coin with head on both sides. One coin ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_78330d3d7d",
+      "qnum": 22,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2024,
+      "text": "If an unbiased dice is rolled thrice, then the probability of getting a greater ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_c6b7dce16d",
+      "qnum": 10,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2024,
+      "text": "There are three bags and . Bag contains 5 one-rupee coins and 4 five-rupee coins",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_acf1b8a1c6",
+      "qnum": 18,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2023,
+      "text": "A bag contains 6 white and 4 black balls. A die is rolled once and the number of",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_83cbab4692",
+      "qnum": 15,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2023,
+      "text": "The random variable follows binomial distribution , for which the difference of ",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_2fea5561d2",
+      "qnum": 12,
+      "subject": "Mathematics",
+      "chapter": "Probability",
+      "year": 2023,
+      "text": "A coin is biased so that the head is 3 times as likely to occur as tail. This co",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2026_15b00542c9",
+      "qnum": 7,
+      "subject": "Mathematics",
+      "chapter": "Binomial Theorem",
+      "year": 2026,
+      "text": "The coefficient of in the expansion of , is :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_fc0d389aad",
+      "qnum": 20,
+      "subject": "Mathematics",
+      "chapter": "Binomial Theorem",
+      "year": 2025,
+      "text": "The number of integral terms in the expansion of is:",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_b32535bfe6",
+      "qnum": 9,
+      "subject": "Mathematics",
+      "chapter": "Binomial Theorem",
+      "year": 2025,
+      "text": "The remainder when is divided by 7 is equal to",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2025_9c47ef6a03",
+      "qnum": 8,
+      "subject": "Mathematics",
+      "chapter": "Binomial Theorem",
+      "year": 2025,
+      "text": "If , where , then is equal to :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_3d7a74e615",
+      "qnum": 23,
+      "subject": "Mathematics",
+      "chapter": "Binomial Theorem",
+      "year": 2024,
+      "text": "The sum of the coefficients of and in the binomial expansion of is",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2024_b794c46fb2",
+      "qnum": 11,
+      "subject": "Mathematics",
+      "chapter": "Binomial Theorem",
+      "year": 2024,
+      "text": "If the term independent of in the expansion of is 105 , then is equal to :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_4c33d8ecac",
+      "qnum": 19,
+      "subject": "Mathematics",
+      "chapter": "Binomial Theorem",
+      "year": 2023,
+      "text": "Let . If and , then is equal to :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_b6558f6d10",
+      "qnum": 16,
+      "subject": "Mathematics",
+      "chapter": "Binomial Theorem",
+      "year": 2023,
+      "text": "The coefficient of in the expansion of is :",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2023_9afea6e26e",
+      "qnum": 13,
+      "subject": "Mathematics",
+      "chapter": "Binomial Theorem",
+      "year": 2023,
+      "text": "Fractional part of the number is equal to",
+      "reason": "Missing original options in attached source files"
+    },
+    {
+      "id": "q_2020_b030d8ad3c",
+      "qnum": 1,
+      "subject": "Mathematics",
+      "chapter": "Matrices and Determinants",
+      "year": 2020,
+      "text": "If $A$ is a $3 \\times 3$ non-singular matrix such that $A A^T = A^T A$ and $B = ",
+      "reason": "Missing original options in attached source files"
+    }
+  ],
+  "missing_figures": [
+    {
+      "id": "q_2026_3a71dc1ab3",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2026,
+      "text": "The velocity versus time plot of a particle is shown in the figure, for a time interval of"
+    },
+    {
+      "id": "q_2025_86965ab3b3",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Kinematics",
+      "year": 2025,
+      "text": "The velocity-time graph of an object moving along a straight line is shown in the figure. "
+    },
+    {
+      "id": "q_2026_dc61b70f68",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2026,
+      "text": "Two blocks ( and ) with respectively masses 2 kg and 1.5 kg are joined by a massless threa"
+    },
+    {
+      "id": "q_2024_ef80da67f4",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2024,
+      "text": "Three blocks having masses and respectively are hanging from a smooth pulley using rope 1,"
+    },
+    {
+      "id": "q_2024_d7855bb538",
+      "qnum": 3,
+      "subject": "Physics",
+      "chapter": "Laws of Motion",
+      "year": 2024,
+      "text": "A mass is suspended from the ceiling by a rope of length . A horizontal force ' ' is appli"
+    },
+    {
+      "id": "q_2026_8cdb32782d",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2026,
+      "text": "The velocity at which 6 kg mass (shown in figure) strikes the ground when it is released f"
+    },
+    {
+      "id": "q_2024_7ace5f7544",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Work, Energy and Power",
+      "year": 2024,
+      "text": "A block is simply released from the top of an inclined plane as shown in the figure above."
+    },
+    {
+      "id": "q_2024_be5cc504d8",
+      "qnum": 2,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2024,
+      "text": "Ratio of radius of gyration of a hollow sphere to that of a solid cylinder of equal mass, "
+    },
+    {
+      "id": "q_2023_0d56b18e06",
+      "qnum": 4,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2023,
+      "text": "A disc is rolling without slipping on a surface. The radius of the disc is . At , the top "
+    },
+    {
+      "id": "q_2023_1528905524",
+      "qnum": 1,
+      "subject": "Physics",
+      "chapter": "Rotational Motion",
+      "year": 2023,
+      "text": "An object of mass 8 kg is hanging from one end of a uniform rod CD of mass 2 kg and length"
+    },
+    {
+      "id": "q_2024_8a16ab76e6",
+      "qnum": 5,
+      "subject": "Physics",
+      "chapter": "Current Electricity",
+      "year": 2024,
+      "text": "To determine the resistance (R) of a wire, a circuit is designed below. The - characterist"
+    },
+    {
+      "id": "q_2023_061af5595c",
+      "qnum": 6,
+      "subject": "Physics",
+      "chapter": "Current Electricity",
+      "year": 2023,
+      "text": "A network of four resistances is connected to battery, as shown in figure. The magnitude o"
+    },
+    {
+      "id": "q_2024_93f9c5293f",
+      "qnum": 7,
+      "subject": "Physics",
+      "chapter": "Electrostatics",
+      "year": 2024,
+      "text": "Five charges and are situated as shown in the figure. The electric flux due to this config"
+    },
+    {
+      "id": "q_2024_355ac4a0aa",
+      "qnum": 8,
+      "subject": "Physics",
+      "chapter": "Thermodynamics",
+      "year": 2024,
+      "text": "A real gas within a closed chamber at undergoes the cyclic process as shown in figure. The"
+    },
+    {
+      "id": "q_2023_11360df04f",
+      "qnum": 3,
+      "subject": "Chemistry",
+      "chapter": "Structure of Atom",
+      "year": 2023,
+      "text": "The electron in the th orbit of is excited to orbit using the radiation of energy (as show"
+    }
+  ]
+}

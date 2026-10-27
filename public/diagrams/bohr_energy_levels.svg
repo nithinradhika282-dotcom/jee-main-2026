@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 250" width="100%" height="100%" style="background:#090d16; border-radius:12px; font-family:sans-serif;">
+  <line x1="80" y1="210" x2="370" y2="210" stroke="#94a3b8" stroke-width="2"/>
+  <text x="385" y="215" fill="#94a3b8" font-size="12">n = 1 (-13.6 eV)</text>
+  <line x1="80" y1="140" x2="370" y2="140" stroke="#94a3b8" stroke-width="2"/>
+  <text x="385" y="145" fill="#94a3b8" font-size="12">n = 2 (-3.4 eV)</text>
+  <line x1="80" y1="90" x2="370" y2="90" stroke="#94a3b8" stroke-width="2"/>
+  <text x="385" y="95" fill="#94a3b8" font-size="12">n = 3 (-1.51 eV)</text>
+  <line x1="80" y1="50" x2="370" y2="50" stroke="#94a3b8" stroke-width="2"/>
+  <text x="385" y="55" fill="#94a3b8" font-size="12">n = 4 (-0.85 eV)</text>
+  <!-- Transition arrow -->
+  <line x1="200" y1="210" x2="200" y2="95" stroke="#f43f5e" stroke-width="3"/>
+  <polygon points="200,90 194,102 206,102" fill="#f43f5e"/>
+  <text x="215" y="160" fill="#f43f5e" font-size="12" font-weight="bold">hν = E3 - E1</text>
+</svg>

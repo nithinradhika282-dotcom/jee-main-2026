@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 250" width="100%" height="100%" style="background:#090d16; border-radius:12px; font-family:sans-serif;">
+  <line x1="120" y1="30" x2="320" y2="30" stroke="#64748b" stroke-width="4"/>
+  <!-- Vertical reference -->
+  <line x1="220" y1="30" x2="220" y2="210" stroke="#475569" stroke-dasharray="3 3"/>
+  <!-- Deflected rope -->
+  <line x1="220" y1="30" x2="270" y2="110" stroke="#f59e0b" stroke-width="2"/>
+  <line x1="270" y1="110" x2="270" y2="175" stroke="#f59e0b" stroke-width="2"/>
+  <!-- Horizontal force F -->
+  <line x1="270" y1="110" x2="360" y2="110" stroke="#f43f5e" stroke-width="3"/>
+  <polygon points="360,110 350,105 350,115" fill="#f43f5e"/>
+  <text x="365" y="115" fill="#f43f5e" font-size="13" font-weight="bold">F</text>
+  <!-- Angle theta -->
+  <path d="M 220 70 A 40 40 0 0 0 240 65" fill="none" stroke="#38bdf8" stroke-width="2"/>
+  <text x="230" y="55" fill="#38bdf8" font-size="11">θ</text>
+  <!-- Mass -->
+  <rect x="250" y="175" width="40" height="40" fill="#1e293b" stroke="#10b981" stroke-width="2" rx="4"/>
+  <text x="263" y="200" fill="#10b981" font-size="13" font-weight="bold">m</text>
+</svg>

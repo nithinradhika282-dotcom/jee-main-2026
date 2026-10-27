@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 240" width="100%" height="100%" style="background:#090d16; border-radius:12px; font-family:sans-serif;">
+  <!-- Gaussian closed contour -->
+  <path d="M 120 70 C 180 30, 280 50, 310 110 C 340 170, 260 210, 180 200 C 100 190, 80 120, 120 70 Z" fill="rgba(56, 189, 248, 0.12)" stroke="#38bdf8" stroke-width="2" stroke-dasharray="5 5"/>
+  <text x="150" y="45" fill="#38bdf8" font-size="11" font-weight="bold">Gaussian Surface S</text>
+  <!-- Enclosed charges -->
+  <circle cx="160" cy="110" r="12" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+  <text x="153" y="115" fill="#10b981" font-size="11" font-weight="bold">+q1</text>
+  <circle cx="230" cy="130" r="12" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+  <text x="225" y="135" fill="#f43f5e" font-size="11" font-weight="bold">-q2</text>
+  <circle cx="200" cy="170" r="12" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+  <text x="193" y="175" fill="#10b981" font-size="11" font-weight="bold">+q3</text>
+  <!-- Outside charges -->
+  <circle cx="60" cy="80" r="12" fill="#1e293b" stroke="#f43f5e" stroke-width="2"/>
+  <text x="54" y="85" fill="#f43f5e" font-size="11" font-weight="bold">-q4</text>
+  <circle cx="360" cy="150" r="12" fill="#1e293b" stroke="#10b981" stroke-width="2"/>
+  <text x="353" y="155" fill="#10b981" font-size="11" font-weight="bold">+q5</text>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 240" width="100%" height="100%" style="background:#090d16; border-radius:12px; font-family:sans-serif;">
+  <line x1="80" y1="40" x2="80" y2="210" stroke="#64748b" stroke-width="4"/>
+  <!-- Pivot C -->
+  <circle cx="80" cy="120" r="6" fill="#f59e0b"/>
+  <text x="60" y="125" fill="#f59e0b" font-size="13" font-weight="bold">C</text>
+  <!-- Horizontal Rod CD -->
+  <rect x="80" y="115" width="260" height="10" fill="#334155" stroke="#38bdf8" stroke-width="2" rx="2"/>
+  <text x="345" y="125" fill="#38bdf8" font-size="13" font-weight="bold">D</text>
+  <!-- Hanging Mass 8kg -->
+  <line x1="330" y1="125" x2="330" y2="165" stroke="#f59e0b" stroke-width="2"/>
+  <rect x="310" y="165" width="40" height="40" fill="#1e293b" stroke="#10b981" stroke-width="2" rx="4"/>
+  <text x="317" y="190" fill="#10b981" font-size="12" font-weight="bold">8 kg</text>
+  <!-- Rod weight 2kg at center -->
+  <line x1="210" y1="125" x2="210" y2="165" stroke="#f43f5e" stroke-width="2"/>
+  <text x="195" y="180" fill="#f43f5e" font-size="11">2 kg (Rod)</text>
+</svg>

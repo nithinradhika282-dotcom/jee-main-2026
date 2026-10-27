@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 250" width="100%" height="100%" style="background:#090d16; border-radius:12px; font-family:sans-serif;">
+  <!-- Table surface -->
+  <line x1="40" y1="120" x2="300" y2="120" stroke="#64748b" stroke-width="4"/>
+  <line x1="300" y1="120" x2="300" y2="230" stroke="#64748b" stroke-width="4"/>
+  <!-- Pulley -->
+  <circle cx="300" cy="115" r="16" fill="#334155" stroke="#94a3b8" stroke-width="2"/>
+  <!-- Block A on table -->
+  <rect x="120" y="80" width="60" height="40" fill="#1e293b" stroke="#38bdf8" stroke-width="2" rx="4"/>
+  <text x="135" y="105" fill="#38bdf8" font-size="13" font-weight="bold">2 kg</text>
+  <!-- String -->
+  <line x1="180" y1="100" x2="300" y2="100" stroke="#f59e0b" stroke-width="2"/>
+  <line x1="316" y1="115" x2="316" y2="170" stroke="#f59e0b" stroke-width="2"/>
+  <!-- Block B hanging -->
+  <rect x="296" y="170" width="40" height="40" fill="#1e293b" stroke="#10b981" stroke-width="2" rx="4"/>
+  <text x="303" y="195" fill="#10b981" font-size="12" font-weight="bold">1.5 kg</text>
+  <!-- Tension markers -->
+  <text x="230" y="93" fill="#f59e0b" font-size="11">T</text>
+  <text x="323" y="150" fill="#f59e0b" font-size="11">T</text>
+</svg>

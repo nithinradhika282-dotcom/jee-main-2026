@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="100%" height="200" style="background:#0f172a; border-radius:8px;">
+  <rect x="0" y="0" width="400" height="200" fill="#0f172a" rx="8"/>
+  <path d="M 50 100 L 100 100" stroke="#38bdf8" stroke-width="3" fill="none"/>
+  <!-- Resistor R1 -->
+  <path d="M 100 100 L 110 80 L 130 120 L 150 80 L 170 120 L 180 100" stroke="#38bdf8" stroke-width="3" fill="none"/>
+  <text x="140" y="65" fill="#f8fafc" font-size="14" font-family="sans-serif" text-anchor="middle">R₁ = 4 Ω</text>
+  <path d="M 180 100 L 220 100" stroke="#38bdf8" stroke-width="3" fill="none"/>
+  <!-- Resistor R2 -->
+  <path d="M 220 100 L 230 80 L 250 120 L 270 80 L 290 120 L 300 100" stroke="#38bdf8" stroke-width="3" fill="none"/>
+  <text x="260" y="65" fill="#f8fafc" font-size="14" font-family="sans-serif" text-anchor="middle">R₂ = 6 Ω</text>
+  <path d="M 300 100 L 350 100 L 350 160 L 230 160" stroke="#38bdf8" stroke-width="3" fill="none"/>
+  <!-- DC Source -->
+  <line x1="230" y1="145" x2="230" y2="175" stroke="#22c55e" stroke-width="3"/>
+  <line x1="215" y1="152" x2="215" y2="168" stroke="#ef4444" stroke-width="4"/>
+  <text x="222" y="192" fill="#38bdf8" font-size="14" font-family="sans-serif" text-anchor="middle">V = 20 V</text>
+  <path d="M 215 160 L 50 160 L 50 100" stroke="#38bdf8" stroke-width="3" fill="none"/>
+  <!-- Nodes -->
+  <circle cx="100" cy="100" r="4" fill="#f59e0b"/>
+  <circle cx="300" cy="100" r="4" fill="#f59e0b"/>
+</svg>

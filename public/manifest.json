@@ -1,0 +1,87 @@
+{
+  "name": "JEE & BITSAT 2026 AI Twin Prep",
+  "short_name": "JEE 2026",
+  "description": "High-Speed Practice, Timed NTA Mock Tests, 3D Flashcards, 60-Chapter Revision Hub & Sarthi AI Tutor",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#020617",
+  "theme_color": "#0284c7",
+  "scope": "/",
+  "categories": [
+    "education",
+    "productivity",
+    "reference"
+  ],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "NTA Mock Test",
+      "short_name": "Mock Test",
+      "description": "Start timed JEE & BITSAT simulation",
+      "url": "/mock-test",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "3D Flashcards",
+      "short_name": "Flashcards",
+      "description": "Spaced recall flashcards with audio",
+      "url": "/flashcards",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "60-Chapter Revision",
+      "short_name": "Revision",
+      "description": "Formulas, shortcuts & exam traps",
+      "url": "/revision",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Sarthi AI Tutor",
+      "short_name": "AI Tutor",
+      "description": "Concept explanation & 24/7 doubt resolution",
+      "url": "/ai-tutor",
+      "icons": [
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}

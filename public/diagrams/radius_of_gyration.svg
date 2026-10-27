@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 240" width="100%" height="100%" style="background:#090d16; border-radius:12px; font-family:sans-serif;">
+  <!-- Sphere -->
+  <circle cx="130" cy="120" r="50" fill="none" stroke="#38bdf8" stroke-width="3"/>
+  <ellipse cx="130" cy="120" rx="50" ry="15" fill="none" stroke="#38bdf8" stroke-dasharray="3 3"/>
+  <line x1="130" y1="40" x2="130" y2="200" stroke="#f43f5e" stroke-width="2"/>
+  <text x="80" y="220" fill="#38bdf8" font-size="12" font-weight="bold">Hollow Sphere</text>
+  <!-- Cylinder -->
+  <ellipse cx="320" cy="70" rx="40" ry="15" fill="none" stroke="#10b981" stroke-width="2"/>
+  <ellipse cx="320" cy="170" rx="40" ry="15" fill="none" stroke="#10b981" stroke-width="2"/>
+  <line x1="280" y1="70" x2="280" y2="170" stroke="#10b981" stroke-width="2"/>
+  <line x1="360" y1="70" x2="360" y2="170" stroke="#10b981" stroke-width="2"/>
+  <line x1="320" y1="40" x2="320" y2="200" stroke="#f43f5e" stroke-width="2"/>
+  <text x="270" y="220" fill="#10b981" font-size="12" font-weight="bold">Solid Cylinder</text>
+</svg>

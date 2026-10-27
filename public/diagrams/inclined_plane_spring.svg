@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 450 250" width="100%" height="100%" style="background:#090d16; border-radius:12px; font-family:sans-serif;">
+  <!-- Incline -->
+  <polygon points="60,210 380,210 380,60" fill="rgba(30, 41, 59, 0.5)" stroke="#64748b" stroke-width="3"/>
+  <text x="110" y="200" fill="#38bdf8" font-size="11">θ = 30°</text>
+  <!-- Spring at bottom -->
+  <path d="M 120 180 L 130 172 L 140 182 L 150 172 L 160 182 L 170 174" fill="none" stroke="#f59e0b" stroke-width="3"/>
+  <!-- Block -->
+  <rect x="300" y="70" width="36" height="30" transform="rotate(25 300 70)" fill="#1e293b" stroke="#10b981" stroke-width="2" rx="3"/>
+  <text x="308" y="95" fill="#10b981" font-size="11" font-weight="bold">m</text>
+</svg>

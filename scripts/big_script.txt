@@ -1,0 +1,143 @@
+
+			// MathJax and highlight.js used to be pulled in here (~1MB combined) to rewrite
+			// the page's primary content after load. Both now run on the server, so the only
+			// third-party script left is AdSense — and it waits until an ad slot is actually
+			// approaching the viewport rather than competing with content at load time.
+			(function () {
+				var loaded = false;
+				function loadAds() {
+					if (loaded) return;
+					loaded = true;
+					var slots = document.querySelectorAll('ins.adsbygoogle');
+					// Push one slot request per <ins> actually on the page. This used to run
+					// from onMount with a hardcoded count; with no client runtime that would
+					// have silently stopped every ad from filling.
+					for (var i = 0; i < slots.length; i++) {
+						try {
+							(window.adsbygoogle = window.adsbygoogle || []).push({});
+						} catch (e) {}
+					}
+					var el = document.createElement('script');
+					el.src =
+						'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8367669190234763';
+					el.crossOrigin = 'anonymous';
+					el.async = true;
+					document.body.appendChild(el);
+				}
+				var slots = document.querySelectorAll('ins.adsbygoogle');
+				if (slots.length) {
+					if (!('IntersectionObserver' in window)) loadAds();
+					else {
+						var io = new IntersectionObserver(
+							function (entries) {
+								for (var i = 0; i < entries.length; i++) {
+									if (entries[i].isIntersecting) {
+										io.disconnect();
+										loadAds();
+										return;
+									}
+								}
+							},
+							{ rootMargin: '600px' }
+						);
+						for (var i = 0; i < slots.length; i++) io.observe(slots[i]);
+					}
+				}
+			})();
+
+			// GA4 via gtag.js. Firebase Analytics wraps gtag and reports to this very same
+			// measurement id, but pulled ~100KB of SDK into every page and only ran from
+			// onMount — which no longer happens on pages without a client runtime.
+			(function () {
+				window.dataLayer = window.dataLayer || [];
+				window.gtag = function () {
+					window.dataLayer.push(arguments);
+				};
+				window.gtag('js', new Date());
+				window.gtag('config', 'G-3T2419ERQK');
+				function load() {
+					var el = document.createElement('script');
+					el.async = true;
+					el.src = 'https://www.googletagmanager.com/gtag/js?id=G-3T2419ERQK';
+					document.head.appendChild(el);
+				}
+				if ('requestIdleCallback' in window) requestIdleCallback(load, { timeout: 4000 });
+				else setTimeout(load, 1500);
+			})();
+
+			// Global chrome. The header drawer and nav dropdowns are pure CSS; only these
+			// three need script, and they are delegated so they cost nothing per element.
+			(function () {
+				var header = document.getElementById('header');
+				if (header) {
+					var onScroll = function () {
+						header.classList.toggle('header-scrolled', window.scrollY > 10);
+					};
+					onScroll();
+					addEventListener('scroll', onScroll, { passive: true });
+				}
+				// Bring the active question into view in the paper navigator. The list can be
+				// 75+ items across several subjects, so without this it always opens on the
+				// first subject regardless of which question is being read.
+				var activeItem = document.querySelector('.q-nav-item-active');
+				if (activeItem) {
+					var list = document.getElementById('side-bar');
+					if (list && list.scrollHeight > list.clientHeight) {
+						list.scrollTop =
+							activeItem.offsetTop - list.clientHeight / 2 + activeItem.clientHeight / 2;
+					}
+				}
+				function closeSidebar() {
+					var sb = document.getElementById('side-bar');
+					var bg = document.querySelector('.sidebar-background');
+					if (sb) sb.classList.remove('open');
+					if (bg) bg.style.display = 'none';
+				}
+				document.addEventListener('click', function (e) {
+					var t = e.target;
+					if (!t || !t.closest) return;
+					if (t.closest('[data-theme-toggle]')) {
+						var dark = !document.documentElement.classList.contains('dark');
+						window.__egApplyTheme(dark);
+						try {
+							localStorage.setItem('color-theme', dark ? 'dark' : 'light');
+						} catch (err) {}
+						return;
+					}
+					if (t.closest('[data-sidebar-toggle]')) {
+						var sb = document.getElementById('side-bar');
+						var bg = document.querySelector('.sidebar-background');
+						if (sb && bg) bg.style.display = sb.classList.toggle('open') ? 'block' : 'none';
+						return;
+					}
+					if (t.closest('#side-bar a')) closeSidebar();
+				});
+			})();
+
+			// Active-user heartbeat, previously IOPIng.svelte mounted from the header. The
+			// zero-JS pass removed every onMount on the site and took this with it, but the
+			// upstream /api/v1 endpoint kept listening — so it is back as plain script rather
+			// than an island, which would be a lot of machinery for a fetch on a timer.
+			(function () {
+				var timeoutId = null;
+				function ping() {
+					if (timeoutId) clearTimeout(timeoutId);
+					// A hidden tab stops pinging entirely; the listener below restarts it.
+					if (document.visibilityState !== 'visible') return;
+					fetch('/api/v1/app/user/public/ping', {
+						method: 'POST',
+						headers: { 'eg-app-id': 'questions-examside-com' }
+					})
+						// An offline blip must not end the heartbeat, and an uncaught rejection
+						// here would log on every one of them.
+						.catch(function () {})
+						.then(function () {
+							// Re-armed once the request settles, as the original did. Its interval
+							// arithmetic clamped to 15s from both sides, so this is that constant.
+							timeoutId = setTimeout(ping, 60_000);
+						});
+				}
+				ping();
+				document.addEventListener('visibilitychange', ping);
+			})();
+		
